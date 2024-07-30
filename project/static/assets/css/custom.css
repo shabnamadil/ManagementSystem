@@ -1,0 +1,9 @@
+.workspace-item:hover *{
+    color: black;
+}
+.workspace-item h6{
+    font-size: 20px !important;
+}
+.workspace-item .badge{
+    padding: 0 10px;
+}

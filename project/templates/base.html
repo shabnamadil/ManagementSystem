@@ -1,0 +1,50 @@
+{% load static %}
+<!doctype html>
+<html class="no-js" lang="en" dir="ltr">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>:: My-Task:: Employee Dashboard </title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon"> <!-- Favicon-->
+    <!-- project css file  -->
+    <link rel="stylesheet" href="{% static "assets/css/my-task.style.min.css" %}">
+</head>
+
+<body  data-mytask="theme-indigo">
+<div id="mytask-layout">
+    
+    <!-- sidebar -->
+    {% if user.is_authenticated %}
+    {% include "components/sidebar/sidebar.html" %}
+    {% endif %}
+    <!-- main body area -->
+    <div class="main {% if user.is_authenticated %}px-lg-4 px-md-4{% else %}p-2 py-3 p-xl-5{% endif %}">
+        <!-- Body: Header -->
+        {% if user.is_authenticated %}
+        {% include "components/header/header.html" %}
+        {% endif %}
+
+        <!-- Body: Body -->
+        {% block body %}{% endblock body %}
+        
+    </div>
+
+    <!-- start: template setting, and more. -->
+
+</div>
+
+<!-- Jquery Core Js -->
+<script src="{% static "assets/bundles/libscripts.bundle.js" %}"></script>
+
+<!-- Plugin Js-->
+<script src="{% static "assets/bundles/apexcharts.bundle.js" %}"></script>
+
+<!-- Jquery Page Js -->
+<script src="https://www.pixelwibes.com/template/my-task/html/js/template.js"></script>
+<script src="https://www.pixelwibes.com/template/my-task/html/js/page/hr.js"></script>
+</body>
+
+</html> 

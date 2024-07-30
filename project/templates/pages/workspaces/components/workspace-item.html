@@ -1,0 +1,60 @@
+{% load static %}
+{% load datahelper %}
+
+<div class="dd-handle w-100 h-100 workspace-item">
+    <div class="task-info d-flex align-items-center justify-content-between">
+        <div class="display-flex align-items-center">
+            <a href="{{workspace.get_absolute_url}}"> 
+                <h6 class=" py-1 rounded-1 d-inline-block fw-bold mb-0">{{workspace.title}}</h6>
+            </a>
+            {% if workspace|is_workspace_moderator:request %}
+            <span class="bg-danger text-light rounded fw-bold p-1 m-1" style="font-size:10px;">Moderator</span>
+            {% endif %}
+        </div>
+
+        <div class="task-priority d-flex align-items-center justify-content-end">
+            <div class="dropdown">
+                <button class="btn border-0 " type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img style="width: 20px;" src="{% static "assets/images/buttons/ellipsis-solid.svg" %}" alt="" srcset="">
+                </button>
+                <ul class="dropdown-menu">
+                {% if workspace|is_workspace_creator:request %}
+                <li><a class="dropdown-item" href="#">Delete</a></li>
+                {% endif %}
+                {% if workspace|is_workspace_creator:request or workspace|is_workspace_moderator:request %}
+                <li><a class="dropdown-item" href="#">Add user</a></li>
+                {% endif %}
+                <li><a class="dropdown-item" href="#">See users</a></li>
+                </ul>
+              </div>
+        </div>
+    </div>
+    <p class="py-2 mb-0">{{workspace.description|truncatechars:"65"}}</p>
+    <div class="tikit-info row g-3 align-items-center">
+        <div class="col-sm">
+            <ul class="d-flex list-unstyled align-items-center flex-wrap">
+                <li class="me-2">
+                    <div class="d-flex align-items-center">
+                        <i class="icofont-ui-text-chat"></i>
+                        <span class="ms-1">0</span>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="tikit-info row g-3 align-items-center">
+        <div class="col-sm">
+            {% for category in workspace.categories.all %}
+            <span class="badge {{category.bg_color}} {{category.text_color}}">{{category.title}}</span>
+            {% endfor %}
+        </div>
+        <div class="col-sm">
+            <div class="task-priority me-2 d-flex align-items-center justify-content-end">
+                <div class="avatar-list avatar-list-stacked m-0">
+                    <img class="avatar rounded-circle small-avt" src="{% static "assets/images/xs/avatar2.jpg" %}" alt="">
+                    <img class="avatar rounded-circle small-avt" src="{% static "assets/images/xs/avatar1.jpg" %}" alt="">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
