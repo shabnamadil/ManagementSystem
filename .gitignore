@@ -138,7 +138,7 @@ venv
 .idea
 
 media/
-static/
+staticfiles/
 
 celerybeat-schedule.db
 celerybeat-schedule
