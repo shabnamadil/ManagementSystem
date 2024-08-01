@@ -22,7 +22,7 @@
                                 <div class="row g-3 gy-5 py-3 row-deck">
                                     {% for workspace in my_workspaces %}
                                     <div class="col-xxl-3 col-xl-4 col-lg-4 col-md-6 col-sm-6">
-                                        {% include "pages/workspaces/components/workspace-item.html" %}
+                                        {% include "pages/workspaces/components/workspace-item.html" with workspace=workspace %}
                                     </div>
                                     {% endfor %}
                                 </div>
@@ -38,7 +38,7 @@
                                 <div class="row g-3 gy-5 py-3 row-deck">
                                     {% for workspace in guest_workspaces %}
                                     <div class="col-xxl-3 col-xl-4 col-lg-4 col-md-6 col-sm-6">
-                                        {% include "pages/workspaces/components/workspace-item.html" %}
+                                        {% include "pages/workspaces/components/workspace-item.html" with workspace=workspace  %}
                                     </div>
                                     {% endfor %}
                                 </div>

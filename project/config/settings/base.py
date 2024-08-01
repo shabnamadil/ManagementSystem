@@ -23,7 +23,7 @@ DJANGO_APPS = [
 
 CUSTOM_APPS = [
     'apps.core.apps.CoreConfig',
-    'apps.project.apps.ProjectConfig',
+    'apps.workspace.apps.WorkspaceConfig',
     'apps.user.apps.UserConfig',
     'apps.reserve.apps.ReserveConfig',
 ]

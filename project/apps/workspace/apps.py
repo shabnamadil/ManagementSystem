@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class ProjectConfig(AppConfig):
+class WorkspaceConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'apps.project'
+    name = 'apps.workspace'
