@@ -3,7 +3,7 @@
 The project uses the following Git workflow:
 
 - **main**: Production code
-- **develop**: Development branch
+- **development**: Development branch
 - **feature/{name}**: Branches for developing new features
 - **bugfix/{name}**: Branches for fixing bugs during development
 - **hotfix/{name}**: Branches for fixing bugs in production
@@ -41,44 +41,44 @@ git pull upstream development
 1. **To add a new feature:**
 
     ```sh
-    git checkout develop
-    git pull origin develop
+    git checkout development
+    git pull origin development
     git checkout -b feature/{name}
     # Example:
     # git checkout -b feature/login-system
     # Develop and commit your code
     git add .
     git commit -m "Description of the feature"
-    git checkout develop
+    git checkout development
     git merge feature/{name}
     # Example:
     # git merge feature/login-system
-    git push origin develop
+    git push origin development
     ```
 
 2. **To fix a bug during development:**
 
     ```sh
-    git checkout develop
-    git pull origin develop
+    git checkout development
+    git pull origin development
     git checkout -b bugfix/{name}
     # Example:
     # git checkout -b bugfix/login-error
     # Fix the bug
     git add .
     git commit -m "Description of the bug fix"
-    git checkout develop
+    git checkout development
     git merge bugfix/{name}
     # Example:
     # git merge bugfix/login-error
-    git push origin develop
+    git push origin development
     ```
 
 3. **To prepare for a production release:**
 
     ```sh
-    git checkout develop
-    git pull origin develop
+    git checkout development
+    git pull origin development
     git checkout -b release/{version}
     # Example:
     # git checkout -b release/1.0.0
