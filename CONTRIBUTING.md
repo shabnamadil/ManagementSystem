@@ -4,9 +4,9 @@ The project uses the following Git workflow:
 
 - **main**: Production code
 - **development**: Development branch
-- **feature/{name}**: Branches for developing new features
-- **bugfix/{name}**: Branches for fixing bugs during development
-- **hotfix/{name}**: Branches for fixing bugs in production
+- **feature/{number}-{name}**: Branches for developing new features
+- **bugfix/{number}-{name}**: Branches for fixing bugs during development
+- **hotfix/{number}-{name}**: Branches for fixing bugs in production
 - **release/{version}**: Branches for final testing before production release
 
 ## Getting Started
@@ -27,85 +27,67 @@ Add the original repository as a remote called upstream.
 git remote add upstream https://github.com/original-username/original-repo-name.git
 ```
 
-## Working on Issues
-
-### Creating a Feature Branch
-Ensure you are on the development branch and it's up to date.
-```sh
-git checkout development
-git pull upstream development
-```
-
 ## Steps
 
 1. **To add a new feature:**
 
     ```sh
     git checkout development
-    git pull origin development
-    git checkout -b feature/{name}
+    git pull upstream development
+
+    git checkout -b feature/{number}-{name}
     # Example:
-    # git checkout -b feature/login-system
+    # git checkout -b feature/001-login-system
+    # git checkout -b feature/002-workspace-system
     # Develop and commit your code
     git add .
     git commit -m "Description of the feature"
-    git checkout development
-    git merge feature/{name}
+    git push origin feature/{number}-{name}
     # Example:
-    # git merge feature/login-system
-    git push origin development
+    git push origin feature/001-login-system
+    git push origin feature/002-workspace-system
+
+    create pull request
     ```
 
 2. **To fix a bug during development:**
 
     ```sh
     git checkout development
-    git pull origin development
-    git checkout -b bugfix/{name}
+    git pull upstream development
+
+    git checkout -b bugfix/{number}-{name}
     # Example:
-    # git checkout -b bugfix/login-error
+    # git checkout -b bugfix/001-fix-login-error
+    # git checkout -b bugfix/002-correct-date-format
     # Fix the bug
     git add .
     git commit -m "Description of the bug fix"
-    git checkout development
-    git merge bugfix/{name}
+    git push origin bugfix/{number}-{name}
     # Example:
-    # git merge bugfix/login-error
-    git push origin development
+    git push origin bugfix/001-login-error
+    git push origin bugfix/002-correct-date-format
+
+    create pull request
     ```
 
-3. **To prepare for a production release:**
-
-    ```sh
-    git checkout development
-    git pull origin development
-    git checkout -b release/{version}
-    # Example:
-    # git checkout -b release/1.0.0
-    # After testing and fixing
-    git checkout main
-    git merge release/{version}
-    # Example:
-    # git merge release/1.0.0
-    git push origin main
-    ```
-
-4. **To fix a bug in production:**
+3. **To fix a bug in production:**
 
     ```sh
     git checkout main
-    git pull origin main
-    git checkout -b hotfix/{name}
+    git pull upstream main
+
+    git checkout -b hotfix/{number}-{name}
     # Example:
-    # git checkout -b hotfix/login-crash
+    # git checkout -b hotfix/001-login-crash
     # Fix the bug
     git add .
     git commit -m "Description of the bug fix"
-    git checkout main
-    git merge hotfix/{name}
+    git push origin hotfix/{number}-{name}
     # Example:
-    # git merge hotfix/login-crash
-    git push origin main
+    git push origin hotfix/001-login-crash
+
+    create pull request
     ```
 
 Creating Pull request
