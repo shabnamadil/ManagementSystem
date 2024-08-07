@@ -11,10 +11,20 @@ The project uses the following Git workflow:
 
 ## Getting Started
 
-1. Fork the repository to your GitHub account.
-2. Clone your forked repository to your local machine.
+## Forking the Repository
+
+1. Go to the [Your Project Name] repository on GitHub.
+2. Click the "Fork" button at the top right corner of the page.
+3. This will create a copy of the repository in your GitHub account.
+
+## Cloning Your Fork
+
+1. Navigate to your forked repository on GitHub.
+2. Click the "Code" button and copy the URL.
+3. Open your terminal and run the following command:
+
 ```sh
-   git clone https://github.com/your-username/your-project-name.git
+git clone https://github.com/your-username/your-project-name.git
 ```
 
 Navigate to the project directory.
@@ -25,6 +35,12 @@ cd your-project-name
 Add the original repository as a remote called upstream.
 ```sh
 git remote add upstream https://github.com/original-username/original-repo-name.git
+```
+
+Create development branch if not exists in your repoistory.
+```sh
+git checkout -b development
+git pull upstream development
 ```
 
 ## Steps
@@ -90,15 +106,33 @@ git remote add upstream https://github.com/original-username/original-repo-name.
     create pull request
     ```
 
-Creating Pull request
+## Creating a Pull Request
 
-1. **Pull Request**: Go to your fork on GitHub and click the `Compare & pull request` button.
-
-2. **Details**: Write a description of your pull request and add any necessary details.
-
-3. **Create**: Click the `Create pull request` button to submit your pull request.
+1. Navigate to the original [Your Project Name] repository on GitHub.
+2. Click the "Pull requests" tab, then the "New pull request" button.
+3. Select your fork and branch as the source, and the original repository's development branch as the destination.
+4. Provide a descriptive title and detailed description of your changes.
+5. Click "Create pull request."
 
 Congratulations! You've successfully created a pull request.
+
+## Pull Request Guidelines
+
+1. Branch: Ensure your pull request is aimed at the development branch, not the main branch.
+
+2. Title: Use a clear and concise title that describes the changes. Follow the format:
+
+3.  Feature: Add [Feature Name] or Implement [Feature Name]
+    Bugfix: Fix [Bug Description]
+    Hotfix: Fix [Critical Issue]
+    Release: Prepare release [Version Number]
+
+4. Description: Provide a detailed description of the changes, including:
+
+What changes were made
+Why the changes were necessary
+Any relevant issues or bugs fixed (reference them with #issue-number)
+
 
 ## License
 
