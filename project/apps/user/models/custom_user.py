@@ -1,43 +1,48 @@
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-class CustomUserManager(BaseUserManager):
-    def create_user(self, email, password=None, **extra_fields):
-        if not email:
-            raise ValueError('The Email field must be set')
-        email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
+import uuid
 
-    def create_superuser(self, email, password=None, **extra_fields):
-        extra_fields.setdefault('is_staff', True)
-        extra_fields.setdefault('is_superuser', True)
-
-        if extra_fields.get('is_staff') is not True:
-            raise ValueError('Superuser must have is_staff=True.')
-        if extra_fields.get('is_superuser') is not True:
-            raise ValueError('Superuser must have is_superuser=True.')
-
-        return self.create_user(email, password, **extra_fields)
+from utils.slugify.custom_slugify import custom_slugify
+from utils.models.base_model import BaseModel
+from apps.user.manager.custom_user_manager import CustomUserManager
     
 
-class CustomUser(AbstractBaseUser, PermissionsMixin):
+class CustomUser(AbstractUser, BaseModel):
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30)
     email = models.EmailField(unique=True)
-    first_name = models.CharField(max_length=30, blank=True)
-    last_name = models.CharField(max_length=30, blank=True)
-    is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
+    slug = models.SlugField(
+        "Link adı",
+        help_text="Bu qismi boş buraxın. Avtomatik doldurulacaq.",
+        null=True, blank=True        
+    )
+    is_banned = models.BooleanField(
+        'Banned',
+        default=False
+    )
 
     objects = CustomUserManager()
 
+    username = None
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
-    def __str__(self):
-        return self.email
-
     class Meta:
-        verbose_name = 'user'
-        verbose_name_plural = 'users'
+        verbose_name = 'İstifadəçi'
+        verbose_name_plural = 'İstifadəçilər'
+    
+    @property
+    def full_name(self):
+        if self.get_full_name():
+            return self.get_full_name()
+        else:
+            return f'Admin User'
+        
+    def __str__(self):
+        return self.full_name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = custom_slugify(f'{self.full_name}{uuid.uuid4().hex[:6]}')
+        super(CustomUser, self).save(*args, **kwargs)
