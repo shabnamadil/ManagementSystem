@@ -15,6 +15,7 @@ class WorkspaceForm(forms.ModelForm):
             'id',
             'title', 
             'description',
+            'category',
             'members', 
             'admins',
             'super_admin',

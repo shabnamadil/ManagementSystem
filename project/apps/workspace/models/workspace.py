@@ -4,14 +4,15 @@ from django.contrib.auth import get_user_model
 from utils.models.base_model import BaseModel
 from utils.slugify.custom_slugify import custom_slugify
 from utils.text.truncate_content import truncate
+from .workspace_category import WorkspaceCategory
 
 User = get_user_model()
 
 
 class Workspace(BaseModel):
     WORKSPACE_STATUS_CHOICES = [
-        ('public', 'public'),
-        ('private', 'private'),
+        ('Şəxsi', 'Şəxsi'),
+        ('Hər kəsə açıq', 'Hər kəsə açıq'),
     ]
     
     title = models.CharField(
@@ -23,6 +24,12 @@ class Workspace(BaseModel):
         'Qısa təsvir',
         null = True, 
         blank = True
+    )
+    category = models.ForeignKey(
+        WorkspaceCategory,
+        on_delete=models.CASCADE, 
+        related_name='workspaces',
+        verbose_name='Kateqoriya'
     )
     members = models.ManyToManyField(
         User,
@@ -41,12 +48,11 @@ class Workspace(BaseModel):
         on_delete=models.CASCADE,
         related_name='super_admin_workspaces',
         verbose_name='Super admin',
-        null=True, blank=True
     )
     status = models.CharField(
         choices=WORKSPACE_STATUS_CHOICES,
-        max_length=10,
-        default='private'
+        max_length=15,
+        default='Şəxsi'
     )
     creator = models.ForeignKey(
         User,
@@ -67,6 +73,8 @@ class Workspace(BaseModel):
     class Meta:
         verbose_name = 'Virtual ofis'
         verbose_name_plural = 'Virtual ofis'
+        indexes = [models.Index(fields=['created'])]
+        ordering = ('-created',)
 
     @property
     def truncated_description(self):

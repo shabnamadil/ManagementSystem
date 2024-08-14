@@ -1,8 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 
-from ckeditor_uploader.fields import RichTextUploadingField
-
 from utils.models.base_model import BaseModel
 from utils.slugify.custom_slugify import custom_slugify
 from utils.text.truncate_content import truncate
@@ -16,7 +14,7 @@ class Task(BaseModel):
         'Başlıq',
         max_length=200,
     )
-    content = RichTextUploadingField(
+    content = models.TextField(
         null=True, blank=True,
         verbose_name='Tapşırığın mətni'
     )

@@ -2,16 +2,26 @@ from rest_framework.generics import (
     CreateAPIView,
     ListCreateAPIView, 
     ListAPIView,
-    RetrieveUpdateDestroyAPIView
+    RetrieveUpdateDestroyAPIView,
+    UpdateAPIView
 )
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 
 from .serializers import (
     WorkspaceListSerializer,
-    WorkspacePostSerializer
+    WorkspacePostSerializer,
+    WorkspaceMemberInvitationSerializer,
+    WorkspaceCategoryListSerializer
 )
-from .repositories import WorkspaceRepository
-from apps.workspace.models import Workspace
 
+from .repositories import WorkspaceRepository
+from apps.workspace.models import (
+    Workspace,
+    WorkspaceCategory
+)
 
 class WorkspaceListCreateAPIView(ListCreateAPIView):
     serializer_class = WorkspaceListSerializer
@@ -36,3 +46,18 @@ class WorkspaceListCreateAPIView(ListCreateAPIView):
             if key in filters:
                 qs = filters[key](value, qs)
         return qs
+    
+
+class WorkspaceRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
+    serializer_class = WorkspacePostSerializer
+    queryset = Workspace.objects.filter(is_banned=False)
+
+
+class WorkspaceMemberInviteView(UpdateAPIView):
+    serializer_class = WorkspaceMemberInvitationSerializer
+    queryset = Workspace.objects.filter(is_banned=False)
+
+
+class WorkspaceCategoryListAPIView(ListAPIView):
+    serializer_class = WorkspaceCategoryListSerializer
+    queryset = WorkspaceCategory.objects.all()

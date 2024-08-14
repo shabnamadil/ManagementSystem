@@ -13,3 +13,7 @@ from .workspace_project import (
 from .project_task import (
     Task
 )
+
+from .workspace_category import (
+    WorkspaceCategory
+)

@@ -7,6 +7,7 @@ from .models import (
     Workspace,
     WorkspaceClientProject,
     WorkspaceProject,
+    WorkspaceCategory,
     Task
 )
 
@@ -44,13 +45,13 @@ class WorkspaceProjectInline(admin.TabularInline):
 class WorkspaceAdmin(admin.ModelAdmin):
     list_display = (
         'title', 'display_description',
-        'display_creator',
+        'display_creator', 'category',
         'display_created_date',
         'is_banned',
     )
-    list_filter = ('created', 'is_banned')
+    list_filter = ('created', 'category', 'is_banned')
     search_fields = (
-        'title', 'description',
+        'title', 'description', 'category__name'
     )
     ordering = ('-updated', 'title')
     date_hierarchy = 'created'
@@ -59,7 +60,8 @@ class WorkspaceAdmin(admin.ModelAdmin):
         'title', 'description', 
         'members', 'admins',
         'creator', 'slug', 
-        'super_admin', 'status'
+        'super_admin', 'status',
+        'category'
     )
     inlines = (WorkspaceProjectInline, )
     form = WorkspaceForm
@@ -189,3 +191,8 @@ class TaskAdmin(admin.ModelAdmin):
 
     def has_change_permission(self, request, obj=None):
         return False
+    
+
+@admin.register(WorkspaceCategory)
+class WorkspaceCategoryAdmin(admin.ModelAdmin):
+    readonly_fields = ('slug',)

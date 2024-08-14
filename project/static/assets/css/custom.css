@@ -1,9 +1,17 @@
-.workspace-item:hover *{
-    color: black;
+.workspace-item:hover {
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    cursor: pointer;
+    user-select: none;
 }
 .workspace-item h6{
     font-size: 20px !important;
 }
 .workspace-item .badge{
     padding: 0 10px;
+}
+.workspacestatus {
+    padding: 1px 15px;
+    border-radius: 5px;
+    font-weight: 800;
+    font-size: 12px;
 }
