@@ -1,0 +1,49 @@
+<div class="modal fade" id="createworkspace" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold" id="createworkspacelLabel">Virtual ofis yarat</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div id="workspacecreatemessage" class="mt-4">
+
+            </div>
+            <form id="createWorkspaceForm" method="post" action="{% url 'workspaces' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="workspaceTitle" class="form-label">Ad<span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="title" id="workspaceTitle"
+                            placeholder="Virtual ofisinizin adı">
+                    </div>
+                    <div class="mb-3">
+                        <label for="workspaceCategory" class="form-label">Kateqoriya</label>
+                        <select class="form-select" id="workspaceCategory" name="category"
+                            aria-label="Default select catgeory">
+                            {% for category in workspace_categories %}
+                            <option value="{{category.id}}" selected>{{category.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="workspaceStatus" class="form-label">Status</label>
+                        <select class="form-select" id="workspaceStatus" name="status"
+                            aria-label="Default select status">
+                            <option value="Hər kəsə açıq" selected>Hər kəsə açıq</option>
+                            <option value="Şəxsi">Şəxsi</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="workspaceDescription" class="form-label">Qısa təsvir (məcburi deyil)</label>
+                        <textarea class="form-control" name="description" id="workspaceDescription" rows="3"
+                            placeholder="Virtual ofisinizi təsvir edin"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tamam</button>
+                    <button type="submit" class="btn btn-primary" id="createWorkspaceBtn">Yarat</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
