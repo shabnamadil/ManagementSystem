@@ -7,23 +7,17 @@
             <a href="{{workspace.get_absolute_url}}"> 
                 <h6 class=" py-1 rounded-1 d-inline-block fw-bold mb-0">{{workspace.title}}</h6>
             </a>
-            {% if workspace|is_workspace_moderator:request %}
             <span class="bg-danger text-light rounded fw-bold p-1 m-1" style="font-size:10px;">Moderator</span>
-            {% endif %}
         </div>
 
         <div class="task-priority d-flex align-items-center justify-content-end">
             <div class="dropdown">
                 <button class="btn border-0 " type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img style="width: 20px;" src="{% static "assets/images/buttons/ellipsis-solid.svg" %}" alt="" srcset="">
+                    <img style="width: 20px;" src="{% static 'assets/images/buttons/ellipsis-solid.svg' %}" alt="" srcset="">
                 </button>
                 <ul class="dropdown-menu">
-                {% if workspace|is_workspace_creator:request %}
                 <li><a class="dropdown-item" href="#">Delete</a></li>
-                {% endif %}
-                {% if workspace|is_workspace_creator:request or workspace|is_workspace_moderator:request %}
                 <li><a class="dropdown-item" href="#">Add user</a></li>
-                {% endif %}
                 <li><a class="dropdown-item" href="#">See users</a></li>
                 </ul>
               </div>

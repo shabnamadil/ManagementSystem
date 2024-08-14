@@ -1,49 +1,48 @@
-from django.contrib.auth.models import AbstractUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth.models import AbstractUser
 from django.db import models
-from django.utils.translation import gettext_lazy as _
 
-class CustomUserManager(BaseUserManager):
-    """
-    Custom user model manager where email is the unique identifiers
-    for authentication instead of usernames.
-    """
-    def create_user(self, email, password, **extra_fields):
-        """
-        Create and save a user with the given email and password.
-        """
-        if not email:
-            raise ValueError(_("The Email must be set"))
-        email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
-        user.set_password(password)
-        user.save()
-        return user
+import uuid
 
-    def create_superuser(self, email, password, **extra_fields):
-        """
-        Create and save a SuperUser with the given email and password.
-        """
-        extra_fields.setdefault("is_staff", True)
-        extra_fields.setdefault("is_superuser", True)
-        extra_fields.setdefault("is_active", True)
+from utils.slugify.custom_slugify import custom_slugify
+from utils.models.base_model import BaseModel
+from apps.user.manager.custom_user_manager import CustomUserManager
+    
 
-        if extra_fields.get("is_staff") is not True:
-            raise ValueError(_("Superuser must have is_staff=True."))
-        if extra_fields.get("is_superuser") is not True:
-            raise ValueError(_("Superuser must have is_superuser=True."))
-        return self.create_user(email, password, **extra_fields)
-
-class CustomUser(AbstractUser):
-    username = None
-    email = models.EmailField(_("email address"), unique=True)
-    is_email_verified = models.BooleanField(_("email verified"), default=False)
-    created = models.DateTimeField(_("Yaradılma vaxtı"),auto_now_add = True, null=True)
-    updated = models.DateTimeField(_("Güncəllənmə vaxtı"), auto_now = True, null=True)
-
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = []
+class CustomUser(AbstractUser, BaseModel):
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30)
+    email = models.EmailField(unique=True)
+    slug = models.SlugField(
+        "Link adı",
+        help_text="Bu qismi boş buraxın. Avtomatik doldurulacaq.",
+        null=True, blank=True        
+    )
+    is_banned = models.BooleanField(
+        'Banned',
+        default=False
+    )
 
     objects = CustomUserManager()
 
+    username = None
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
+
+    class Meta:
+        verbose_name = 'İstifadəçi'
+        verbose_name_plural = 'İstifadəçilər'
+    
+    @property
+    def full_name(self):
+        if self.get_full_name():
+            return self.get_full_name()
+        else:
+            return f'Admin User'
+        
     def __str__(self):
-        return self.email
+        return self.full_name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = custom_slugify(f'{self.full_name}{uuid.uuid4().hex[:6]}')
+        super(CustomUser, self).save(*args, **kwargs)
