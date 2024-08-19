@@ -1,9 +1,8 @@
-Django
+Django==4.2.0
 djangorestframework
 django-filter
-celery
 django-browser-reload
-django-celery-beat==2.3.0
+django-celery-beat==2.6.0
 django-celery-results==2.4.0
 django-cors-headers==3.13.0
 django-ckeditor==6.7.1
@@ -20,6 +19,8 @@ transliterate
 whitenoise
 python-telegram-bot
 openai
+setuptools
+celery
 
 #deploy
 gunicorn

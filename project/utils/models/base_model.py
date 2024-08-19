@@ -7,3 +7,7 @@ class BaseModel(models.Model):
 
     class Meta:
         abstract = True
+
+    @property
+    def created_date(self):
+        return self.created.strftime('%d/%m/%Y, %H:%M')
