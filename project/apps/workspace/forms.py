@@ -16,9 +16,6 @@ class WorkspaceForm(forms.ModelForm):
             'title', 
             'description',
             'category',
-            'members', 
-            'admins',
-            'super_admin',
             'status',
             'is_banned',
             'creator',
@@ -28,18 +25,18 @@ class WorkspaceForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def clean(self):
-        cleaned_data = super().clean()
-        admins = cleaned_data.get('admins', [])
-        members = cleaned_data.get('members', [])
-        super_admin = cleaned_data.get('super_admin', None)
+    # def clean(self):
+    #     cleaned_data = super().clean()
+    #     admins = cleaned_data.get('admins', [])
+    #     members = cleaned_data.get('members', [])
+    #     super_admin = cleaned_data.get('super_admin', None)
 
-        if not set(admins).issubset(set(members)):
-            raise ValidationError('All admins must be member of workspace')
-        if super_admin and super_admin not in admins:
-            raise ValidationError('Super admin must be one of the admins')
+    #     if not set(admins).issubset(set(members)):
+    #         raise ValidationError('All admins must be member of workspace')
+    #     if super_admin and super_admin not in admins:
+    #         raise ValidationError('Super admin must be one of the admins')
 
-        return cleaned_data
+    #     return cleaned_data
 
 
 class WorkspaceProjectForm(forms.ModelForm):
@@ -55,7 +52,7 @@ class WorkspaceProjectForm(forms.ModelForm):
         workspace = cleaned_data.get('workspace', None)
         moderator = cleaned_data.get('moderator', None)
 
-        if moderator not in workspace.members.all():
+        if moderator not in workspace.workspace_members.all():
             raise ValidationError('Moderator must be member of Workspace')
 
 

@@ -2,7 +2,9 @@ const BASE_URL = `${location.origin}/api/workspaces/`;
 const createWorkspaceForm = document.getElementById('createWorkspaceForm');
 const container = document.getElementById('my_workspaces');
 const errorWorkspaceCreateMessage = document.getElementById('workspacecreatemessage');
+const errorWorkspaceEditMessage = document.getElementById('editMessage');
 const createWorkspaceBtn = document.getElementById('createWorkspaceBtn')
+const cancelCreate = document.getElementById('cancel-create')
 
 let workspaceCategories = []
 
@@ -46,6 +48,13 @@ function displayWorkspaces(workspaces) {
   workspaces.forEach(workspace => {
     setWorkspaceInviteForm(workspace);
     setDeleteWorkspaceBtn(workspace);
+    setWorkspaceEditForm(workspace)
+    if (workspace.workspace_members.length > 0) {
+      workspace.workspace_members.forEach(member => {
+        setRemoveWorkspaceMemberBtn(workspace, member)
+      })
+    }
+
   });
 }
 
@@ -53,7 +62,7 @@ function createWorkspaceCard(workspace) {
   const category = workspaceCategories.find(category => category.id === workspace.category);
 
   return `
-    <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 col-sm-6">
+    <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 col-sm-6"  id="workspace-item-${workspace.id}">
       <div class="card workspace-item">
         <div class="card-body">
           <div class="d-flex align-items-center justify-content-between mt-5">
@@ -69,8 +78,8 @@ function createWorkspaceCard(workspace) {
                   </div>
               </div>
             </div>
-            <div class="btn-group" role="group" aria-label="Basic outlined example">
-              <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editproject">
+            <div class="btn-group ms-2" role="group" aria-label="Basic outlined example">
+              <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editworkspace-${workspace.id}">
                 <i class="icofont-edit text-success"></i>
               </button>
               <button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#deleteworkspace-${workspace.id}">
@@ -152,7 +161,16 @@ async function createWorkspace(formData) {
 
       createWorkspaceForm.reset();
     } else {
-      throw new Error('Failed to create workspace');
+      errorWorkspaceCreateMessage.innerHTML = ''
+      errorWorkspaceCreateMessage.innerHTML += '<div id="errorMessage" class="alert alert-danger text-center">Ad əlavə etmək mütləqdir!!!</div>'
+
+      setTimeout(() => {
+        const errorMessage = document.getElementById('errorMessage');
+        if (errorMessage) {
+          errorMessage.remove();
+        }
+      }, 5000);
+
     }
 
   } catch (error) {
@@ -198,11 +216,127 @@ async function deleteWorkspace(workspace) {
   }
 }
 
-async function workspaceMemberInvite(formData, workspace) {
-  const url = `${BASE_URL}member/invite/${workspace.slug}/`
+async function editWorkspace(formData, workspace) {
+  const url = `${BASE_URL}${workspace.id}/`
   const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
-  const email = document.getElementById('workspaceMemberEmail').value
-  formData.append('email', JSON.stringify(email))
+
+  try {
+    const response = await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'X-CSRFToken': csrfToken
+      },
+      body: formData
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      const workspaceCard = document.getElementById(`workspace-item-${workspace.id}`);
+      workspaceCard.outerHTML = createWorkspaceCard(data);
+      const editWorkspaceModal = bootstrap.Modal.getInstance(document.getElementById(`editworkspace-${workspace.id}`));
+      if (editWorkspaceModal) {
+        editWorkspaceModal.hide();
+      }
+      const successEditMessageInfoModal = new bootstrap.Modal(document.getElementById('editStaticBackdropLive'));
+      successEditMessageInfoModal.show();
+
+      setTimeout(() => {
+        if (successEditMessageInfoModal) {
+          successEditMessageInfoModal.hide();
+        }
+      }, 5000);
+
+    } else {
+      console.log(errorWorkspaceEditMessage.innerHTML);
+      
+      errorWorkspaceEditMessage.innerHTML = ''
+      errorWorkspaceEditMessage.innerHTML += '<div id="editErrorMessage" class="alert alert-danger text-center">Ad əlavə etmək mütləqdir!!!</div>'
+      console.log(errorWorkspaceEditMessage.innerHTML);
+      
+
+      setTimeout(() => {
+        const errorMessage = document.getElementById('editErrorMessage');
+        if (errorMessage) {
+          errorMessage.remove();
+        }
+      }, 5000);
+
+    }
+
+  } catch (error) {
+    errorWorkspaceEditMessage.innerHTML = `<div id="editerrorMessage" class="alert alert-danger text-center">Error: ${error.message}</div>`;
+
+    setTimeout(() => {
+      const errorMessage = document.getElementById('editErrorMessage');
+      if (errorMessage) {
+        errorMessage.remove();
+      }
+    }, 5000);
+  }
+}
+
+async function changeWorkspaceMemberRole(formData, workspace) {
+  const url = `${BASE_URL}${workspace.id}/`
+  const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+
+  try {
+    const response = await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'X-CSRFToken': csrfToken
+      },
+      body: formData
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      const workspaceCard = document.getElementById(`workspace-item-${workspace.id}`);
+      workspaceCard.outerHTML = createWorkspaceCard(data);
+      const editWorkspaceModal = bootstrap.Modal.getInstance(document.getElementById(`editworkspace-${workspace.id}`));
+      if (editWorkspaceModal) {
+        editWorkspaceModal.hide();
+      }
+      const successEditMessageInfoModal = new bootstrap.Modal(document.getElementById('editStaticBackdropLive'));
+      successEditMessageInfoModal.show();
+
+      setTimeout(() => {
+        if (successEditMessageInfoModal) {
+          successEditMessageInfoModal.hide();
+        }
+      }, 5000);
+
+    } else {
+      console.log(errorWorkspaceEditMessage.innerHTML);
+      
+      errorWorkspaceEditMessage.innerHTML = ''
+      errorWorkspaceEditMessage.innerHTML += '<div id="editErrorMessage" class="alert alert-danger text-center">Ad əlavə etmək mütləqdir!!!</div>'
+      console.log(errorWorkspaceEditMessage.innerHTML);
+      
+
+      setTimeout(() => {
+        const errorMessage = document.getElementById('editErrorMessage');
+        if (errorMessage) {
+          errorMessage.remove();
+        }
+      }, 5000);
+
+    }
+
+  } catch (error) {
+    errorWorkspaceEditMessage.innerHTML = `<div id="editerrorMessage" class="alert alert-danger text-center">Error: ${error.message}</div>`;
+
+    setTimeout(() => {
+      const errorMessage = document.getElementById('editErrorMessage');
+      if (errorMessage) {
+        errorMessage.remove();
+      }
+    }, 5000);
+  }
+}
+
+async function workspaceMemberInvite(formData, workspace) {
+  const url = `${BASE_URL}member/invite/${workspace.id}/`
+  const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
 
   try {
     const response = await fetch(url, {
@@ -223,6 +357,31 @@ async function workspaceMemberInvite(formData, workspace) {
 
 }
 
+async function workspaceMemberRemove(memberId, workspace) {
+  const url = `${BASE_URL}member/remove/${workspace.id}/`
+  const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+  
+  const data = {
+    member: memberId
+  };
+
+  try {
+    const response = await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'X-CSRFToken': csrfToken,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+
+    if (!response.ok) throw new Error('Failed to remove member from workspace');
+
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 function setWorkspaceInviteForm(workspace) {
   const workspaceMemberInviteForm = document.getElementById(`workspaceMemberInviteForm-${workspace.id}`)
   workspaceMemberInviteForm.addEventListener('submit', function (e) {
@@ -240,9 +399,58 @@ function setDeleteWorkspaceBtn(workspace) {
   })
 }
 
+function setCancelWorkspaceEditBtn(workspace, editWorkspaceForm) {
+  const cancelEditWorkspaceBtn = document.getElementById(`cancel-edit-${workspace.id}`)
+  cancelEditWorkspaceBtn.addEventListener('click', function (e) {
+    e.preventDefault()
+    editWorkspaceForm.reset()
+  })
+}
+
+function setCancelWorkspaceMemberRoleChangeBtn(workspace, roleChangeForm) {
+  const cancelRoleChangeBtn = document.getElementById(`cancelRoleChange-${workspace.id}`)
+  cancelRoleChangeBtn.addEventListener('click', function (e) {
+    e.preventDefault()
+    roleChangeForm.reset()
+  })
+}
+
+function setRemoveWorkspaceMemberBtn(workspace, member) {
+  const removeBtn = document.getElementById(`remove-member-${member.id}`)
+  removeBtn.addEventListener('click', function(e) {
+    e.preventDefault()
+    workspaceMemberRemove(member.id, workspace)
+  })
+}
+
+function setWorkspaceEditForm(workspace) {
+  const editWorkspaceForm = document.getElementById(`editWorkspaceForm-${workspace.id}`)
+  editWorkspaceForm.addEventListener('submit', function (e) {
+    e.preventDefault()
+    editWorkspace((new FormData(editWorkspaceForm)), workspace)
+  })
+  if (editWorkspaceForm) {
+    setCancelWorkspaceEditBtn(workspace, editWorkspaceForm)
+  }
+}
+
+function setWorkspaceMemberRoleChangeForm(workspace) {
+  const roleChangeForm = document.getElementById(`roleChange-${workspace.id}`)
+  roleChangeForm.addEventListener('submit', function (e) {
+    e.preventDefault()
+    changeWorkspaceMemberRole((new FormData(roleChangeForm)), workspace)
+  })
+  if (roleChangeForm) {
+    setCancelWorkspaceMemberRoleChangeBtn(workspace, roleChangeForm)
+  }
+}
+
 createWorkspaceForm.addEventListener('submit', function (e) {
   e.preventDefault();
   createWorkspace(new FormData(createWorkspaceForm));
 });
 
-
+cancelCreate.addEventListener('click', function(e) {
+  e.preventDefault()
+  createWorkspaceForm.reset()
+})

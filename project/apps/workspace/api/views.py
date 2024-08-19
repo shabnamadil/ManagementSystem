@@ -14,7 +14,9 @@ from .serializers import (
     WorkspaceListSerializer,
     WorkspacePostSerializer,
     WorkspaceMemberInvitationSerializer,
-    WorkspaceCategoryListSerializer
+    WorkspaceCategoryListSerializer,
+    WorkspaceMemberRemoveSerializer,
+    WorkspaceMemberRoleUpdateSerializer
 )
 
 from .repositories import WorkspaceRepository
@@ -61,3 +63,12 @@ class WorkspaceMemberInviteView(UpdateAPIView):
 class WorkspaceCategoryListAPIView(ListAPIView):
     serializer_class = WorkspaceCategoryListSerializer
     queryset = WorkspaceCategory.objects.all()
+
+class WorkspaceMemberRemoveView(UpdateAPIView):
+    serializer_class = WorkspaceMemberRemoveSerializer
+    queryset = Workspace.objects.filter(is_banned=False)
+
+
+class WorkspaceMemberRoleUpdateAPIView(UpdateAPIView):
+    serializer_class = WorkspaceMemberRoleUpdateSerializer
+    queryset = Workspace.objects.filter(is_banned=False)

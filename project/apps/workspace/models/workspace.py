@@ -17,7 +17,7 @@ class Workspace(BaseModel):
     
     title = models.CharField(
         'Virtual ofisin adı', 
-        max_length = 200, 
+        max_length = 20, 
         unique = True
     )
     description = models.TextField(
@@ -30,24 +30,6 @@ class Workspace(BaseModel):
         on_delete=models.CASCADE, 
         related_name='workspaces',
         verbose_name='Kateqoriya'
-    )
-    members = models.ManyToManyField(
-        User,
-        related_name='member_workspaces',
-        blank=True,
-        verbose_name='üzvlər'
-    )
-    admins = models.ManyToManyField(
-        User,
-        related_name='admin_workspaces',
-        blank=True,
-        verbose_name='Adminlər'
-    )
-    super_admin = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='super_admin_workspaces',
-        verbose_name='Super admin',
     )
     status = models.CharField(
         choices=WORKSPACE_STATUS_CHOICES,

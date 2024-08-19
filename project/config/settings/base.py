@@ -19,6 +19,7 @@ DJANGO_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites'
 ]
 
 CUSTOM_APPS = [
@@ -46,6 +47,8 @@ THIRD_PARTY_APPS = [
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + CUSTOM_APPS
+
+SITE_ID=1
 
 
 FILE_UPLOAD_HANDLERS = [
@@ -186,3 +189,11 @@ CKEDITOR_CONFIGS = {
             ]),
         },
 }
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'sebnemadil1999@gmail.com'
+EMAIL_HOST_PASSWORD = 'szhlclkyzbguxuhk'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

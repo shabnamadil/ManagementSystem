@@ -40,7 +40,7 @@ class CustomUser(AbstractUser, BaseModel):
             return f'Admin User'
         
     def __str__(self):
-        return self.full_name
+        return self.email
 
     def save(self, *args, **kwargs):
         if not self.slug:

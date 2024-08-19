@@ -8,7 +8,9 @@ from .models import (
     WorkspaceClientProject,
     WorkspaceProject,
     WorkspaceCategory,
-    Task
+    Task,
+    WorkspaceMember,
+    WorkspaceInvitation
 )
 
 from .forms import (
@@ -26,19 +28,19 @@ def make_ban(self, request, queryset):
 
 class WorkspaceProjectInline(admin.TabularInline):
     model = WorkspaceProject
-    readonly_fields = ('client', 'moderator')
+    # readonly_fields = ('client', 'moderator')
     classes = ('collapse',)
     form = WorkspaceProjectForm
     extra = 0
 
-    def has_add_permission(self, request, obj):
-        return False 
+    # def has_add_permission(self, request, obj):
+    #     return False 
 
-    def has_delete_permission(self, request, obj):
-        return False 
+    # def has_delete_permission(self, request, obj):
+    #     return False 
 
-    def has_change_permission(self, request, obj):
-        return False
+    # def has_change_permission(self, request, obj):
+    #     return False
     
 
 @admin.register(Workspace)
@@ -56,13 +58,13 @@ class WorkspaceAdmin(admin.ModelAdmin):
     ordering = ('-updated', 'title')
     date_hierarchy = 'created'
     list_per_page = 20
-    readonly_fields = (
-        'title', 'description', 
-        'members', 'admins',
-        'creator', 'slug', 
-        'super_admin', 'status',
-        'category'
-    )
+    # readonly_fields = (
+    #     'title', 'description', 
+    #     'members', 'admins',
+    #     'creator', 'slug', 
+    #     'super_admin', 'status',
+    #     'category'
+    # )
     inlines = (WorkspaceProjectInline, )
     form = WorkspaceForm
     actions = (make_ban,)
@@ -89,8 +91,8 @@ class WorkspaceAdmin(admin.ModelAdmin):
         return obj.created_date
     display_created_date.short_description = 'Yaranma tarixi'
 
-    def has_add_permission(self, request, obj=None):
-        return False 
+    # def has_add_permission(self, request, obj=None):
+    #     return False 
 
 
 @admin.register(WorkspaceClientProject)
@@ -108,11 +110,11 @@ class WorkspaceClientProjectAdmin(admin.ModelAdmin):
     ordering = ('-updated', 'title')
     date_hierarchy = 'created'
     list_per_page = 20
-    readonly_fields = (
-        'title', 'description',
-        'workspace_project', 'moderator',
-        'slug'
-    )
+    # readonly_fields = (
+    #     'title', 'description',
+    #     'workspace_project', 'moderator',
+    #     'slug'
+    # )
     form = WorkspaceClientProjectForm
 
     def display_description(self, obj):
@@ -132,14 +134,14 @@ class WorkspaceClientProjectAdmin(admin.ModelAdmin):
         return obj.created_date
     display_created_date.short_description = 'Yaranma tarixi'
 
-    def has_add_permission(self, request, obj=None):
-        return False 
+    # def has_add_permission(self, request, obj=None):
+    #     return False 
 
-    def has_delete_permission(self, request, obj=None):
-        return False 
+    # def has_delete_permission(self, request, obj=None):
+    #     return False 
 
-    def has_change_permission(self, request, obj=None):
-        return False
+    # def has_change_permission(self, request, obj=None):
+    #     return False
 
 
 @admin.register(Task)
@@ -156,13 +158,13 @@ class TaskAdmin(admin.ModelAdmin):
     ordering = ('-updated', 'title')
     date_hierarchy = 'created'
     list_per_page = 20
-    readonly_fields = (
-        'title', 'content',
-        'project', 'file',
-        'task_assigned_to',
-        'deadline',
-        'task_creator', 'slug'
-    )
+    # readonly_fields = (
+    #     'title', 'content',
+    #     'project', 'file',
+    #     'task_assigned_to',
+    #     'deadline',
+    #     'task_creator', 'slug'
+    # )
     form = TaskForm
 
     def save_model(self, request, obj, form, change):
@@ -183,16 +185,56 @@ class TaskAdmin(admin.ModelAdmin):
         return obj.deadline.strftime('%d/%m/%Y, %H:%M')
     display_deadline.short_description = 'Taskın bitmə tarixi'
 
-    def has_add_permission(self, request, obj=None):
-        return False 
+    # def has_add_permission(self, request, obj=None):
+    #     return False 
 
-    def has_delete_permission(self, request, obj=None):
-        return False 
+    # def has_delete_permission(self, request, obj=None):
+    #     return False 
 
-    def has_change_permission(self, request, obj=None):
-        return False
+    # def has_change_permission(self, request, obj=None):
+    #     return False
     
 
 @admin.register(WorkspaceCategory)
 class WorkspaceCategoryAdmin(admin.ModelAdmin):
     readonly_fields = ('slug',)
+
+
+@admin.register(WorkspaceMember)
+class WorkspaceMemberAdmin(admin.ModelAdmin):
+    list_display = ('user', 'role', 'workspace', 'created_date')
+    list_filter = ('role', 'user', 'workspace')
+    readonly_fields = ('user', 'role', 'workspace')
+    search_fields = ('user__email', 'role', 'workspace__title')
+    ordering = ('role', )
+    list_per_page = 20
+    date_hierarchy = 'created'
+
+    # def has_add_permission(self, request, obj=None):
+    #     return False 
+
+    # def has_delete_permission(self, request, obj=None):
+    #     return False 
+
+    # def has_change_permission(self, request, obj=None):
+    #     return False
+
+
+@admin.register(WorkspaceInvitation)
+class WorkspaceinvitationAdmin(admin.ModelAdmin):
+    list_display = ('email', 'workspace', 'is_accepted', 'created_date')
+    list_filter = ('is_accepted', 'workspace')
+    search_fields = ('email', 'workspace__tiele')
+    readonly_fields = ('email', 'workspace', 'is_accepted', 'token')
+    ordering = ('-created',)
+    list_per_page = 20
+    date_hierarchy = 'created'
+
+    # def has_add_permission(self, request, obj=None):
+    #     return False 
+
+    # def has_delete_permission(self, request, obj=None):
+    #     return False 
+
+    # def has_change_permission(self, request, obj=None):
+    #     return False

@@ -21,8 +21,8 @@ class WorkspaceProject(BaseModel):
         verbose_name='Müştəri'
     )
     moderator = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
+        'workspace.WorkspaceMember',
+        on_delete=models.SET_NULL,
         related_name='workspace_projects',
         verbose_name='Virtual ofis layihə moderatoru',
         null=True, blank=True

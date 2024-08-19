@@ -21,11 +21,11 @@ DATABASES = {
     }
 }
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-DEFAULT_FROM_EMAIL = None
-EMAIL_HOST = None
-EMAIL_PORT = None
-EMAIL_HOST_USER = None
-EMAIL_HOST_PASSWORD = None
-EMAIL_USE_TLS = None
+# DEFAULT_FROM_EMAIL = None
+# EMAIL_HOST = None
+# EMAIL_PORT = None
+# EMAIL_HOST_USER = None
+# EMAIL_HOST_PASSWORD = None
+# EMAIL_USE_TLS = None
