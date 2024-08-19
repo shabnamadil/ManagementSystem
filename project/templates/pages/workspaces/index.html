@@ -11,12 +11,15 @@
                             <div class="d-flex py-2 project-tab flex-wrap w-sm-100">
                                 <button type="button" class="btn btn-dark w-sm-100" data-bs-toggle="modal" data-bs-target="#createworkspace"><i class="icofont-plus-circle me-2 fs-6"></i>Virtual ofis yarat</button>
                             </div>
-                            {% include 'components/modals/create_workspace_modal.html' with workspace_categories=workspace_categories %}
+                            {% include 'components/modals/create_workspace_modal.html' %}
                             {% for workspace in my_workspaces %}
                             {% include 'components/modals/member_invitation_modal.html' with workspace=workspace %}     
                             {% include 'components/modals/delete_workspace_modal.html' with workspace=workspace %} 
+                            {% include 'components/modals/edit_workspace_modal.html' with workspace=workspace %}
                             {% include 'components/modals/delete_workspace_message_modal.html' with workspace=workspace %}  
                             {% include 'components/modals/create_workspace_message_modal.html' with workspace=workspace %}
+                            {% include 'components/modals/edit_workspace_message_modal.html' with workspace=workspace %}
+                            {% include 'components/modals/member_role_change_modal.html' with workspace=workspace %}
                             {% endfor %}                   
                         </div>
                     </div>

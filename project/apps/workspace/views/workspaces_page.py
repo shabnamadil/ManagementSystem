@@ -1,13 +1,12 @@
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth import get_user_model
 
 from ..models import (
     Workspace,
     WorkspaceCategory
 )
 
-User = get_user_model()
+
 
 class WorkspacePageView(LoginRequiredMixin, TemplateView):
     template_name = 'pages/workspaces/index.html'
