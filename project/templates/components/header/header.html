@@ -39,7 +39,7 @@
                                             <a href="javascript:void(0);" class="d-flex">
                                                 <img class="avatar rounded-circle" src="{% static "assets/images/xs/avatar1.jpg" %}" alt="">
                                                 <div class="flex-fill ms-2">
-                                                    <p class="d-flex justify-content-between mb-0 "><span class="font-weight-bold">Dylan Hunter</span> <small>2MIN</small></p>
+                                                    <p class="d-flex justify-content-between mb-0 "><span class="font-weight-bold">{{request.user.get_full_name}}</span> <small>2MIN</small></p>
                                                     <span class="">Added  2021-02-19 my-Task ui/ux Design <span class="badge bg-success">Review</span></span>
                                                 </div>
                                             </a>
@@ -98,8 +98,11 @@
                 </div>
                 <div class="dropdown user-profile ml-2 ml-sm-3 d-flex align-items-center">
                     <div class="u-info me-2">
-                        <p class="mb-0 text-end line-height-sm "><span class="font-weight-bold">Dylan Hunter</span></p>
-                        <small>Admin Profile</small>
+                        {% if request.user.get_full_name %}
+                        <p class="mb-0 text-end line-height-sm "><span class="font-weight-bold">{{request.user.get_full_name}}</span></p>
+                        {% else %}
+                        <p class="mb-0 text-end line-height-sm "><span class="font-weight-bold">Admin User</span></p>
+                        {% endif %}
                     </div>
                     <a class="nav-link dropdown-toggle pulse p-0" href="#" role="button" data-bs-toggle="dropdown" data-bs-display="static">
                         <img class="avatar lg rounded-circle img-thumbnail" src="{% static "assets/images/profile_av.png" %}" alt="profile">
@@ -110,8 +113,12 @@
                                 <div class="d-flex py-1">
                                     <img class="avatar rounded-circle" src="{% static "assets/images/profile_av.png" %}" alt="profile">
                                     <div class="flex-fill ms-3">
-                                        <p class="mb-0"><span class="font-weight-bold">Dylan Hunter</span></p>
-                                        <small class="">Dylan.hunter@gmail.com</small>
+                                        {% if request.user.get_full_name %}
+                                        <p class="mb-0"><span class="font-weight-bold">{{request.user}}</span></p>
+                                        {% else %}
+                                        <p class="mb-0"><span class="font-weight-bold">{{request.user}}</span></p>
+                                        {% endif %}
+                                        <small class="">{{request.user.email}}</small>
                                     </div>
                                 </div>
                                 

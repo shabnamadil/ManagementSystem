@@ -1,0 +1,48 @@
+<div class="modal fade" id="editworkspace-{{workspace.id}}" tabindex="-1"  aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title  fw-bold" id="editprojectLabel"> Redaktə edin </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div id="editMessage" class="mt-4">
+
+        </div>
+        <form method="patch" action="{% url 'workspaces' %}" id="editWorkspaceForm-{{workspace.id}}">
+            {% csrf_token %}
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="exampleFormControlInput78" class="form-label">Virtual ofisin adı</label>
+                    <input type="text" class="form-control" name="title" id="exampleFormControlInput78" value="{{workspace.title}}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Kateqoriya</label>
+                    <select name="category" class="form-select" aria-label="Default select example">
+                        {% for category in workspace_categories.all %}
+                        <option value="{{ category.id }}" {% if workspace.category.id == category.id %}selected{% endif %}>
+                            {{ category.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>                
+                <div class="mb-3">
+                    <label for="workspaceStatus" class="form-label">Status</label>
+                    <select class="form-select" id="workspaceStatus" name="status" aria-label="Default select status">
+                        <option value="Hər kəsə açıq" {% if workspace.status == "Hər kəsə açıq" %}selected{% endif %}>Hər kəsə açıq</option>
+                        <option value="Şəxsi" {% if workspace.status == "Şəxsi" %}selected{% endif %}>Şəxsi</option>
+                    </select>
+                </div>                
+                <div class="mb-3">
+                    <label for="workspaceDescription" class="form-label">Qısa təsvir (məcburi deyil)</label>
+                    <textarea class="form-control" name="description" value="{{workspace.description}}" id="workspaceDescription" rows="3"
+                        placeholder="Virtual ofisin qısa təsviri">{{workspace.description}}</textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancel-edit-{{workspace.id}}">Ləğv et</button>
+                <button type="submit" class="btn btn-primary">Təsdiq</button>
+            </div>
+        </form>
+    </div>
+    </div>
+</div>

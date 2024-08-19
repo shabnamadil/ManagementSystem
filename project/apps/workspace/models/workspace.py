@@ -1,62 +1,71 @@
 from django.db import models
 from django.contrib.auth import get_user_model
-from django.urls import reverse
 
 from utils.models.base_model import BaseModel
 from utils.slugify.custom_slugify import custom_slugify
+from utils.text.truncate_content import truncate
+from .workspace_category import WorkspaceCategory
 
 User = get_user_model()
 
-class WorkspaceCategory(BaseModel):
-    BG_COLOR_PALETTE = [
-        ("bg-danger", "red", ),
-        ("bg-primary", "blue", ),
-        ("bg-success", "green", ),
-        ("bg-warning", "yellow", ),
-        ("bg-light", "white", ),
-        ("bg-dark", "black", ),
-    ]
-    TEXT_COLOR_PALETTE = [
-        ("text-danger", "red", ),
-        ("text-primary", "blue", ),
-        ("text-success", "green", ),
-        ("text-warning", "yellow", ),
-        ("text-light", "white", ),
-        ("text-dark", "black", ),
-    ]
-    title = models.CharField(max_length = 200)
-    text_color = models.CharField(max_length = 50, choices = TEXT_COLOR_PALETTE, null = True, blank = True)
-    bg_color = models.CharField(max_length = 50, choices = BG_COLOR_PALETTE, null = True, blank = True)
-    
-    def __str__(self) -> str:
-        return self.title
 
 class Workspace(BaseModel):
-    title = models.CharField(max_length = 200, unique = True)
-    slug = models.SlugField(blank=True, null=True, unique = True)
-    description = models.TextField(null = True, blank = True)
-    categories = models.ManyToManyField(WorkspaceCategory, related_name = 'workspaces')
-    # image = models.ImageField(upload_to = 'workspaces', null = True, blank = True)
-    # notifications = models.IntegerField(choices = NOTIFICATIONS, null = True, blank = True)
+    WORKSPACE_STATUS_CHOICES = [
+        ('Şəxsi', 'Şəxsi'),
+        ('Hər kəsə açıq', 'Hər kəsə açıq'),
+    ]
+    
+    title = models.CharField(
+        'Virtual ofisin adı', 
+        max_length = 20, 
+        unique = True
+    )
+    description = models.TextField(
+        'Qısa təsvir',
+        null = True, 
+        blank = True
+    )
+    category = models.ForeignKey(
+        WorkspaceCategory,
+        on_delete=models.CASCADE, 
+        related_name='workspaces',
+        verbose_name='Kateqoriya'
+    )
+    status = models.CharField(
+        choices=WORKSPACE_STATUS_CHOICES,
+        max_length=15,
+        default='Şəxsi'
+    )
+    creator = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='creator_workspaces',
+        verbose_name='Virtual ofis yaratdı'
+    )
+    slug = models.SlugField(
+        "Link adı",
+        help_text="Bu qismi boş buraxın. Avtomatik doldurulacaq.",
+        null=True, blank=True        
+    )
+    is_banned = models.BooleanField(
+        'Banned',
+        default=False)
+
+
+    class Meta:
+        verbose_name = 'Virtual ofis'
+        verbose_name_plural = 'Virtual ofis'
+        indexes = [models.Index(fields=['created'])]
+        ordering = ('-created',)
+
+    @property
+    def truncated_description(self):
+        return truncate(self.description)
 
     def save(self, *args, **kwargs):
-        self.slug = custom_slugify(self.title)
+        if not self.slug:
+            self.slug = custom_slugify(self.title)
         super(Workspace, self).save(*args, **kwargs)
 
     def __str__(self) -> str:
         return self.title
-
-    # def get_absolute_url(self):
-    #     return reverse("workspace-detail", kwargs={"slug": self.slug})
-
-class WorkspaceUser(models.Model):
-    user = models.ForeignKey(User, on_delete = models.CASCADE, related_name = 'workspace_users')
-    workspace = models.ForeignKey(Workspace, on_delete = models.CASCADE, related_name = 'workspace_users')
-    is_creator = models.BooleanField(default = False)
-    is_moderator = models.BooleanField(default = False)
-
-    class Meta:
-        unique_together = ['user', 'workspace']
-
-    def __str__(self) -> str:
-        return f'{self.user}'
