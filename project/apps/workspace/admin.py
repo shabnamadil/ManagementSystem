@@ -5,42 +5,18 @@ from django.utils.safestring import mark_safe
 
 from .models import (
     Workspace,
-    WorkspaceClientProject,
     WorkspaceProject,
     WorkspaceCategory,
     Task,
     WorkspaceMember,
-    WorkspaceInvitation
-)
-
-from .forms import (
-    WorkspaceForm,
-    WorkspaceProjectForm,
-    WorkspaceClientProjectForm,
-    TaskForm
+    WorkspaceInvitation,
+    ProjectMember
 )
 
 
 @admin.action(description="Make banned selected workspaces")
 def make_ban(self, request, queryset):
     queryset.update(is_banned=True)
-
-
-class WorkspaceProjectInline(admin.TabularInline):
-    model = WorkspaceProject
-    # readonly_fields = ('client', 'moderator')
-    classes = ('collapse',)
-    form = WorkspaceProjectForm
-    extra = 0
-
-    # def has_add_permission(self, request, obj):
-    #     return False 
-
-    # def has_delete_permission(self, request, obj):
-    #     return False 
-
-    # def has_change_permission(self, request, obj):
-    #     return False
     
 
 @admin.register(Workspace)
@@ -65,8 +41,6 @@ class WorkspaceAdmin(admin.ModelAdmin):
     #     'super_admin', 'status',
     #     'category'
     # )
-    inlines = (WorkspaceProjectInline, )
-    form = WorkspaceForm
     actions = (make_ban,)
 
     def save_model(self, request, obj, form, change):
@@ -95,47 +69,58 @@ class WorkspaceAdmin(admin.ModelAdmin):
     #     return False 
 
 
-@admin.register(WorkspaceClientProject)
-class WorkspaceClientProjectAdmin(admin.ModelAdmin):
+@admin.register(WorkspaceProject)
+class WorkspaceProjectAdmin(admin.ModelAdmin):
     list_display = (
         'title', 'display_description',
-        'workspace_project',
-        'display_moderator',
+        'display_creator', 'display_workspace',
         'display_created_date'
     )
     list_filter = ('created',)
     search_fields = (
-        'title', 'description',
+        'title', 'description', 'workspace__title'
     )
     ordering = ('-updated', 'title')
     date_hierarchy = 'created'
     list_per_page = 20
     # readonly_fields = (
-    #     'title', 'description',
-    #     'workspace_project', 'moderator',
-    #     'slug'
+    #     'title', 'description', 
+    #     'creator', 'slug', 'workspace'
     # )
-    form = WorkspaceClientProjectForm
+
+    def save_model(self, request, obj, form, change):
+        if not obj.pk:
+            obj.creator = request.user
+        super().save_model(request, obj, form, change)
 
     def display_description(self, obj):
         return obj.truncated_description
     display_description.short_description = 'Qısa təsvir'
 
-    def display_moderator(self, obj):
-        url = reverse("admin:user_customuser_change", args=[obj.moderator.id if obj.moderator else None])
+    def display_creator(self, obj):
+        url = reverse("admin:user_customuser_change", args=[obj.creator.id])
         link = '<a style="color: red;" href="%s">%s</a>' % (
             url, 
-            obj.moderator
+            obj.creator.email
         )
         return mark_safe(link)
-    display_moderator.short_description = 'Müştəri layihə rəhbəri'
+    display_creator.short_description = 'Layihəni yaratdı'
+
+    def display_workspace(self, obj):
+        url = reverse("admin:workspace_workspace_change", args=[obj.workspace.id])
+        link = '<a style="color: red;" href="%s">%s</a>' % (
+            url, 
+            obj.workspace
+        )
+        return mark_safe(link)
+    display_workspace.short_description = 'Virtual ofis'
 
     def display_created_date(self, obj):
         return obj.created_date
     display_created_date.short_description = 'Yaranma tarixi'
 
     # def has_add_permission(self, request, obj=None):
-    #     return False 
+    #     return False
 
     # def has_delete_permission(self, request, obj=None):
     #     return False 
@@ -165,7 +150,6 @@ class TaskAdmin(admin.ModelAdmin):
     #     'deadline',
     #     'task_creator', 'slug'
     # )
-    form = TaskForm
 
     def save_model(self, request, obj, form, change):
         if not obj.pk:
@@ -206,6 +190,26 @@ class WorkspaceMemberAdmin(admin.ModelAdmin):
     list_filter = ('role', 'user', 'workspace')
     readonly_fields = ('user', 'role', 'workspace')
     search_fields = ('user__email', 'role', 'workspace__title')
+    ordering = ('role', )
+    list_per_page = 20
+    date_hierarchy = 'created'
+
+    # def has_add_permission(self, request, obj=None):
+    #     return False 
+
+    # def has_delete_permission(self, request, obj=None):
+    #     return False 
+
+    # def has_change_permission(self, request, obj=None):
+    #     return False
+
+
+@admin.register(ProjectMember)
+class ProjetctMemberAdmin(admin.ModelAdmin):
+    list_display = ('user', 'role', 'project', 'created_date')
+    list_filter = ('role', 'user', 'project')
+    readonly_fields = ('user', 'role', 'project')
+    search_fields = ('user__email', 'role', 'project__title')
     ordering = ('role', )
     list_per_page = 20
     date_hierarchy = 'created'

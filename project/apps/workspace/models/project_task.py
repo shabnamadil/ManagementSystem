@@ -5,7 +5,7 @@ from utils.models.base_model import BaseModel
 from utils.slugify.custom_slugify import custom_slugify
 from utils.text.truncate_content import truncate
 from utils.upload.task_image_upload import upload_to
-from .client_project import WorkspaceClientProject
+from .workspace_project import WorkspaceProject
 
 User = get_user_model()
 
@@ -34,7 +34,7 @@ class Task(BaseModel):
         verbose_name='Taskı yerinə yetirməlidir'
     )
     project = models.ForeignKey(
-        WorkspaceClientProject,
+        WorkspaceProject,
         on_delete=models.CASCADE,
         related_name='project_tasks',
         verbose_name='Müştəri layihəsi'

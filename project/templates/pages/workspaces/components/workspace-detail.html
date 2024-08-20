@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% load static %}
+{% block body %}
+<div class="body d-flex py-3">
+    <div class="container-xxl">
+        <div class="row g-3 mb-3 row-deck">
+            <div class="col-md-12 col-lg-8 col-xl-7 col-xxl-7">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-12 col-md-5 col-lg-6 order-md-2 ">
+                                <div class="text-center p-4">
+                                    <img src="{% static 'assets/images/task-view.svg' %}" alt="..." class="img-fluid">
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-7 col-lg-6 order-md-1 px-4">
+                                <h3 class="fw-bold ">{{workspace.title}}</h3>
+                                <p class="line-height-custom">{{workspace.description}}</p>
+                                <a class="btn bg-secondary text-light btn-lg lift" href="{% url 'workspaces' %}">Got to back</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 col-lg-4 col-xl-5 col-xxl-5">
+                <div class="alert alert-primary p-3 mb-0 w-100">
+                    <h6 class="fw-bold mb-1">Create New Project</h6>
+                    <div class="my-3 ">
+                        <input type="text" class="form-control form-control-lg" placeholder="Enter Username">
+                    </div>
+                    <div class="my-3">
+                        <input type="password" class="form-control form-control-lg" placeholder="Enter Password">
+                    </div>
+                    <div class="my-3">
+                        <input type="password" class="form-control form-control-lg" placeholder="Confirm Password">
+                    </div>
+                    <button class="btn btn-primary mt-2">Create</button>
+                </div>
+            </div>
+        </div><!-- Row End -->
+        <div class="row g-3 mb-3 row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-2 row-cols-xl-4 row-cols-xxl-4">
+            <div class="col">
+                <div class="card bg-primary">
+                    <div class="card-body text-white d-flex align-items-center">
+                        <i class="icofont-data fs-3"></i>
+                        <div class="d-flex flex-column ms-3">
+                            <h6 class="mb-0">Total Projects</h6>
+                            <span class="text-white">550</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card bg-primary">
+                    <div class="card-body text-white d-flex align-items-center">
+                        <i class="icofont-chart-flow fs-3"></i>
+                        <div class="d-flex flex-column ms-3">
+                            <h6 class="mb-0">Coming Projects</h6>
+                            <span class="text-white">210</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card bg-primary">
+                    <div class="card-body text-white d-flex align-items-center">
+                        <i class="icofont-chart-flow-2 fs-3"></i>
+                        <div class="d-flex flex-column ms-3">
+                            <h6 class="mb-0">Progress Projects</h6>
+                            <span class="text-white">8456 Files</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card bg-primary">
+                    <div class="card-body text-white d-flex align-items-center">
+                        <i class="icofont-tasks fs-3"></i>
+                        <div class="d-flex flex-column ms-3">
+                            <h6 class="mb-0">Finished Projects</h6>
+                            <span class="text-white">88 Files</span>
+                        </div>
+                    </div>
+                </div>
+            </div>             
+        </div>
+        <div class="row g-3 mb-3 row-deck">
+            <div class="col-md-12">
+                <div class="card mb-3">
+                        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                            <div class="info-header">
+                                <h6 class="mb-0 fw-bold ">Project Information</h6>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <table id="myProjectTable" class="table table-hover align-middle mb-0" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Client</th>
+                                        <th>moderator</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for workspace_project in workspace.workspace_projects.all %}
+                                    <tr>
+                                        <td><a href="projects.html">{{workspace_project.title}}</a></td>
+                                        <td>{{workspace_project.client}}</td>
+                                        <td><img src="{% static 'assets/images/xs/avatar1.jpg' %}" alt="Avatar" class="avatar sm  rounded-circle me-2"><a href="#">{{workspace_project.moderator.user}}</a></td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                </div>
+            </div>
+        </div><!-- Row End -->
+    </div>             
+</div>
+{% endblock body %}

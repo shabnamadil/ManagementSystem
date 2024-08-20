@@ -2,6 +2,7 @@ from django.urls import path, re_path
 
 from .views.workspaces_page import WorkspacePageView
 from .views.accept_invitation import accept_invitation
+from .views.workspace_detail import WorkspaceDetailView
 
 
 urlpatterns = [
@@ -11,8 +12,7 @@ urlpatterns = [
         accept_invitation,
         name='workspace-accept-invite'
     ),
-    # path('workspaces/', views.WorkspacesPageView.as_view(), name = 'workspaces'),
-    # path('workspaces/<slug:slug>/', views.WorkspaceDetailPageView.as_view(), name = 'workspace-detail'),
+    path('workspaces/<slug:slug>/', WorkspaceDetailView.as_view(), name = 'workspace-detail'),
     # path('create-workspace/', views.WorkspaceCreateAPIView.as_view(), name = 'create-workspace'),
 
     # path('workspaces/<slug:slug>/<slug:project_slug>/tasks/', views.TasksPageView.as_view(), name = 'tasks'),

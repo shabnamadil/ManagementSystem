@@ -52,6 +52,7 @@ function displayWorkspaces(workspaces) {
     if (workspace.workspace_members.length > 0) {
       workspace.workspace_members.forEach(member => {
         setRemoveWorkspaceMemberBtn(workspace, member)
+        setWorkspaceMemberRoleChangeForm(workspace, member)
       })
     }
 
@@ -72,7 +73,7 @@ function createWorkspaceCard(workspace) {
               </div>
               <span class="small text-muted project_name fw-bold">${category.name}</span>
               <div class="d-flex align-items-center justify-content-center"> 
-                  <h6 class="mb-0 fw-bold fs-6">${workspace.title}</h6> 
+                  <a href="${workspace.get_absolute_url}"><h6 class="mb-0 fw-bold fs-6">${workspace.title}</h6></a>
                   <div class="d-flex align-items-center justify-content-center ms-2">
                     <span class="small light-danger-bg  p-1 rounded"><i class="icofont-ui-clock"></i> ${workspace.created_date} </span>
                   </div>
@@ -276,8 +277,9 @@ async function editWorkspace(formData, workspace) {
 }
 
 async function changeWorkspaceMemberRole(formData, workspace) {
-  const url = `${BASE_URL}${workspace.id}/`
+  const url = `${BASE_URL}member/role/${workspace.id}/`
   const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+  
 
   try {
     const response = await fetch(url, {
@@ -288,49 +290,9 @@ async function changeWorkspaceMemberRole(formData, workspace) {
       body: formData
     });
 
-    if (response.ok) {
-      const data = await response.json();
-      const workspaceCard = document.getElementById(`workspace-item-${workspace.id}`);
-      workspaceCard.outerHTML = createWorkspaceCard(data);
-      const editWorkspaceModal = bootstrap.Modal.getInstance(document.getElementById(`editworkspace-${workspace.id}`));
-      if (editWorkspaceModal) {
-        editWorkspaceModal.hide();
-      }
-      const successEditMessageInfoModal = new bootstrap.Modal(document.getElementById('editStaticBackdropLive'));
-      successEditMessageInfoModal.show();
-
-      setTimeout(() => {
-        if (successEditMessageInfoModal) {
-          successEditMessageInfoModal.hide();
-        }
-      }, 5000);
-
-    } else {
-      console.log(errorWorkspaceEditMessage.innerHTML);
-      
-      errorWorkspaceEditMessage.innerHTML = ''
-      errorWorkspaceEditMessage.innerHTML += '<div id="editErrorMessage" class="alert alert-danger text-center">Ad əlavə etmək mütləqdir!!!</div>'
-      console.log(errorWorkspaceEditMessage.innerHTML);
-      
-
-      setTimeout(() => {
-        const errorMessage = document.getElementById('editErrorMessage');
-        if (errorMessage) {
-          errorMessage.remove();
-        }
-      }, 5000);
-
-    }
-
   } catch (error) {
-    errorWorkspaceEditMessage.innerHTML = `<div id="editerrorMessage" class="alert alert-danger text-center">Error: ${error.message}</div>`;
-
-    setTimeout(() => {
-      const errorMessage = document.getElementById('editErrorMessage');
-      if (errorMessage) {
-        errorMessage.remove();
-      }
-    }, 5000);
+    console.log(error);
+    
   }
 }
 
@@ -407,8 +369,9 @@ function setCancelWorkspaceEditBtn(workspace, editWorkspaceForm) {
   })
 }
 
-function setCancelWorkspaceMemberRoleChangeBtn(workspace, roleChangeForm) {
-  const cancelRoleChangeBtn = document.getElementById(`cancelRoleChange-${workspace.id}`)
+function setCancelWorkspaceMemberRoleChangeBtn(roleChangeForm, member) {
+  const cancelRoleChangeBtn = document.getElementById(`cancelRoleChange-${member.id}`)
+  
   cancelRoleChangeBtn.addEventListener('click', function (e) {
     e.preventDefault()
     roleChangeForm.reset()
@@ -434,14 +397,16 @@ function setWorkspaceEditForm(workspace) {
   }
 }
 
-function setWorkspaceMemberRoleChangeForm(workspace) {
-  const roleChangeForm = document.getElementById(`roleChange-${workspace.id}`)
+function setWorkspaceMemberRoleChangeForm(workspace, member) {
+  
+  const roleChangeForm = document.getElementById(`editWorkspaceMemberRole-${member.id}`)
+  
   roleChangeForm.addEventListener('submit', function (e) {
     e.preventDefault()
     changeWorkspaceMemberRole((new FormData(roleChangeForm)), workspace)
   })
   if (roleChangeForm) {
-    setCancelWorkspaceMemberRoleChangeBtn(workspace, roleChangeForm)
+    setCancelWorkspaceMemberRoleChangeBtn(roleChangeForm, member)
   }
 }
 

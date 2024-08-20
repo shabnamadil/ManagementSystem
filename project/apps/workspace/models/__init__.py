@@ -2,10 +2,6 @@ from .workspace import (
     Workspace
 )
 
-from .client_project import (
-    WorkspaceClientProject
-)
-
 from .workspace_project import (
     WorkspaceProject
 )
@@ -24,4 +20,8 @@ from .workspace_members import (
 
 from .workspace_invitation import (
     WorkspaceInvitation
+)
+
+from .project_members import (
+    ProjectMember
 )

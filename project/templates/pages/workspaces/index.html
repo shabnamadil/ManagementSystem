@@ -19,7 +19,9 @@
                             {% include 'components/modals/delete_workspace_message_modal.html' with workspace=workspace %}  
                             {% include 'components/modals/create_workspace_message_modal.html' with workspace=workspace %}
                             {% include 'components/modals/edit_workspace_message_modal.html' with workspace=workspace %}
-                            {% include 'components/modals/member_role_change_modal.html' with workspace=workspace %}
+                            {% for member in workspace.workspace_members.all %}
+                            {% include 'components/modals/member_role_change_modal.html' with member=member %}
+                            {% endfor %}
                             {% endfor %}                   
                         </div>
                     </div>

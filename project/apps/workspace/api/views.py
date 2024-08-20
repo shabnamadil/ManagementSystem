@@ -16,13 +16,16 @@ from .serializers import (
     WorkspaceMemberInvitationSerializer,
     WorkspaceCategoryListSerializer,
     WorkspaceMemberRemoveSerializer,
-    WorkspaceMemberRoleUpdateSerializer
+    WorkspaceMemberRoleUpdateSerializer,
+    ProjectListSerializer,
+    ProjectPostSerializer
 )
 
 from .repositories import WorkspaceRepository
 from apps.workspace.models import (
     Workspace,
-    WorkspaceCategory
+    WorkspaceCategory,
+    WorkspaceProject
 )
 
 class WorkspaceListCreateAPIView(ListCreateAPIView):
@@ -64,6 +67,7 @@ class WorkspaceCategoryListAPIView(ListAPIView):
     serializer_class = WorkspaceCategoryListSerializer
     queryset = WorkspaceCategory.objects.all()
 
+
 class WorkspaceMemberRemoveView(UpdateAPIView):
     serializer_class = WorkspaceMemberRemoveSerializer
     queryset = Workspace.objects.filter(is_banned=False)
@@ -72,3 +76,18 @@ class WorkspaceMemberRemoveView(UpdateAPIView):
 class WorkspaceMemberRoleUpdateAPIView(UpdateAPIView):
     serializer_class = WorkspaceMemberRoleUpdateSerializer
     queryset = Workspace.objects.filter(is_banned=False)
+
+
+class ProjectListCreateAPIView(ListCreateAPIView):
+    serializer_class = ProjectListSerializer
+    queryset = WorkspaceProject.objects.all()
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST' :
+            self.serializer_class = ProjectPostSerializer
+        return super().get_serializer_class()
+
+
+class ProjectRetrieveUpdateDestoryAPIView(RetrieveUpdateDestroyAPIView):
+    serializer_class = ProjectPostSerializer
+    queryset = WorkspaceProject.objects.all()

@@ -18,7 +18,9 @@ from apps.workspace.models import (
     Workspace,
     WorkspaceCategory,
     WorkspaceMember,
-    WorkspaceInvitation
+    WorkspaceInvitation,
+    WorkspaceProject,
+    ProjectMember
 )
 from apps.user.api.serializers import UserListSerializer
 
@@ -67,6 +69,7 @@ class WorkspaceListSerializer(serializers.ModelSerializer):
             'members_count',
             'tasks_count',
             'created_date',
+            'get_absolute_url'
         )
 
     def get_creator(self, obj):
@@ -87,11 +90,9 @@ class WorkspaceListSerializer(serializers.ModelSerializer):
     def get_tasks_count(self, obj):
         workspace_tasks_count = 0
         if obj.workspace_projects:
-            for workspace_project in obj.workspace_projects.all():
-                if workspace_project:
-                    for client_project in workspace_project.client_projects.all():
-                        if client_project:
-                            workspace_tasks_count += client_project.project_tasks.count()
+            for project in obj.workspace_projects.all():
+                if project:
+                        workspace_tasks_count += project.project_tasks.count()
             return workspace_tasks_count
         return workspace_tasks_count
 
@@ -242,3 +243,75 @@ class WorkspaceMemberRoleUpdateSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("This user is not a member of the workspace.")
         
         return attrs
+
+
+class ProjectMemberListSerializer(serializers.ModelSerializer):
+    user = UserListSerializer()
+
+    class Meta:
+        model = ProjectMember
+        fields = (
+            'id',
+            'user',
+            'role'
+        )
+
+
+class ProjectListSerializer(serializers.ModelSerializer):
+    creator = serializers.SerializerMethodField()
+    tasks_count = serializers.SerializerMethodField()
+    members_count = serializers.SerializerMethodField()
+    project_members = ProjectMemberListSerializer(many=True)
+
+    class Meta:
+        model = WorkspaceProject
+        fields = (
+            'id',
+            'title',
+            'description',
+            'workspace',
+            'project_members',
+            'creator',
+            'tasks_count',
+            'members_count',
+            'created_date'
+        )
+
+    def get_creator(self, obj):
+        if obj.creator.get_full_name():
+            return obj.creator.get_full_name()
+        return 'Admin User'
+    
+    def get_members_count(self, obj):
+        if obj.project_members:
+            return obj.project_members.count()
+        return 0
+    
+    def get_tasks_count(self, obj):
+        return obj.project_tasks.count()
+    
+
+class ProjectPostSerializer(ProjectListSerializer):
+    creator = serializers.PrimaryKeyRelatedField(read_only=True)
+    project_members = serializers.SerializerMethodField()
+
+    def validate(self, attrs):
+        request = self.context['request']
+        if not self.instance:
+            attrs['creator'] = request.user
+        return super().validate(attrs)
+    
+    def get_project_members(self, obj):
+        return ProjectMemberListSerializer(obj.project_members.all(), many=True).data
+    
+    def create(self, validated_data):
+        creator = validated_data.pop('creator')
+        project = WorkspaceProject.objects.create(**validated_data, creator=creator)
+        
+        ProjectMember.objects.create(
+            user=creator, 
+            role=ProjectMember.ROLE_CHOICES[1][1],
+            project=project
+        )
+        
+        return project
