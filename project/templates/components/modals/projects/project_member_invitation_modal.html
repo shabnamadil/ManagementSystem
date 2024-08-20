@@ -1,5 +1,5 @@
 {% load static %}
-<div class="modal fade" id="addUser-{{workspace.id}}" tabindex="-1" aria-labelledby="addUserLabel" aria-hidden="true">
+<div class="modal fade" id="addProjectMember-{{project.id}}" tabindex="-1" aria-labelledby="addProjectMemberLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
         <div class="modal-header">
@@ -8,10 +8,10 @@
         </div>
         <div class="modal-body">
             <div class="inviteby_email">
-                <form method="put" action="{% url 'workspaces' %}" id="workspaceMemberInviteForm-{{workspace.id}}">
+                <form method="patch" action="{% url 'workspace-detail' project.workspace.slug %}" id="projectMemberInviteForm-{{project.id}}">
                     {% csrf_token %}
                     <div class="input-group mb-3">
-                        <input type="email" name="email" class="form-control" value="" placeholder="Email address" id="workspaceMemberEmail" aria-describedby="exampleInputEmail1">
+                        <input type="email" name="email" class="form-control" value="" placeholder="Email address" id="projectMemberEmail" aria-describedby="exampleInputEmail1">
                         <button class="btn btn-dark" type="submit" id="button-addon2">Sent</button>
                     </div>
                 </form>
@@ -19,7 +19,7 @@
             <div class="members_list">
                 <h6 class="fw-bold "> Üzvlər </h6>
                 <ul class="list-unstyled list-group list-group-custom list-group-flush mb-0">
-                    {% for member in workspace.workspace_members.all %}
+                    {% for member in project.project_members.all %}
                     <li class="list-group-item py-3 text-center text-md-start">
                         <div class="d-flex align-items-center flex-column flex-sm-column flex-md-column flex-lg-row">
                             <div class="no-thumbnail mb-2 mb-md-0">
@@ -36,8 +36,8 @@
                                         <i class="icofont-ui-settings  fs-6"></i>
                                     </button>
                                         <ul class="dropdown-menu dropdown-menu-end">
-                                            <li><a class="dropdown-item" href="#" name="member" id="remove-member-{{member.id}}"><i class="icofont-not-allowed  fs-6 me-2"></i>Üzvlükdən çıxar</a></li>
-                                            <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#roleChange-{{workspace.id}}"><i class="icofont-exchange fs-6 me-2"></i>Statusunu dəyiş</a></li>
+                                            <li><a class="dropdown-item" href="#" name="member" id="remove-project-member-{{member.id}}"><i class="icofont-not-allowed  fs-6 me-2"></i>Üzvlükdən çıxar</a></li>
+                                            <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#projectMemberRoleChange-{{member.id}}"><i class="icofont-exchange fs-6 me-2"></i>Statusunu dəyiş</a></li>
                                         </ul>
                                 </div>
                             </div>

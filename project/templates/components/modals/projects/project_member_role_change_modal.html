@@ -1,14 +1,11 @@
-<div class="modal fade" id="roleChange-{{workspace.id}}" tabindex="-1"  aria-hidden="true">
+<div class="modal fade" id="projectMemberRoleChange-{{member.id}}" tabindex="-1"  aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
     <div class="modal-content">
         <div class="modal-header">
             <h5 class="modal-title  fw-bold" id="editprojectLabel"> Rol dəyiş</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div id="roleChangeMessage" class="mt-4">
-
-        </div>
-        <form method="patch" action="{% url 'workspaces' %}" id="editWorkspaceMemberRole-{{workspace.id}}">
+        <form method="patch" action="{% url 'workspace-detail' member.project.workspace.slug %}" id="editProjectMemberRole-{{member.id}}">
             {% csrf_token %}
             <div class="modal-body">
                 <div class="mb-3">
@@ -17,13 +14,13 @@
                         <option value="Adi üzv"> Adi üzv </option>
                         <option value="Moderator"> Moderator </option>
                         <option value="Admin"> Admin </option>
-                        <option value="Super admin"> Super admin </option>
                     </select>
                 </div>                
             </div>
+            <input type="hidden" value="{{member.id}}" name="member" id="">
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelRoleChange-{{workspace.id}}">Ləğv et</button>
-                <button type="submit" class="btn btn-primary">Təsdiq</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="cancelRoleChange-{{member.id}}">Ləğv et</button>
+                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Təsdiq</button>
             </div>
         </form>
     </div>

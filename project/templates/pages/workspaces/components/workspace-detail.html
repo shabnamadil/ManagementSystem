@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% load static %}
+{% block body %}
+<div class="body d-flex py-3">
+    <div class="container-xxl">
+        <div class="row g-3 mb-3 row-deck">
+            <div class="col-md-12 col-lg-8 col-xl-7 col-xxl-7">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-12 col-md-5 col-lg-6 order-md-2 ">
+                                <div class="text-center p-4">
+                                    <img src="{% static 'assets/images/task-view.svg' %}" alt="..." class="img-fluid">
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-7 col-lg-6 order-md-1 px-4">
+                                <h3 class="fw-bold ">{{workspace.title}}</h3>
+                                <p class="line-height-custom">{{workspace.description}}</p>
+                                <a class="btn bg-secondary text-light btn-lg lift" href="{% url 'workspaces' %}">Got to back</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 col-lg-4 col-xl-5 col-xxl-5">
+                <div class="alert alert-primary p-3 mb-0 w-100">
+                    <h6 class="fw-bold mb-1">Create New Project</h6>
+                    {% include 'pages/workspaces/components/projects/create-project.html' %}
+                </div>
+            </div>
+        </div><!-- Row End -->
+        <div class="row g-3 mb-3 row-deck">
+            <div class="col-md-12">
+                <div class="card mb-3">
+                        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                            <div class="d-flex justify-content-center align-items-center">
+                                <h6 class="mb-0 fw-bold ">Proyektlər</h6>
+                            </div>
+                        </div>
+                        <div class="row g-3 gy-5 py-3 row-deck mt-3" id="workspace_projects">
+
+                        </div>
+                        {% for project in workspace.workspace_projects.all %}
+                        {% include 'components/modals/projects/delete_project_modal.html' with project=project %}
+                        {% include 'components/modals/projects/edit_project_modal.html' with project=project %}
+                        {% include 'components/modals/projects/project_member_invitation_modal.html' with project=project %}
+                        {% for member in project.project_members.all %}
+                        {% include 'components/modals/projects/project_member_role_change_modal.html' with member=member %}
+                        {% endfor %}
+                        {% endfor %}
+                </div>
+            </div>
+        </div><!-- Row End -->
+    </div>             
+</div>
+{% endblock body %}
+
+{% block script %}
+
+<script src="{% static 'assets/js/api/projects.js' %}"></script>
+<script>
+    const workspace = "{{workspace.slug}}"
+</script>
+
+{% endblock script %}
