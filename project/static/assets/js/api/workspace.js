@@ -248,13 +248,10 @@ async function editWorkspace(formData, workspace) {
       }, 5000);
 
     } else {
-      console.log(errorWorkspaceEditMessage.innerHTML);
       
       errorWorkspaceEditMessage.innerHTML = ''
       errorWorkspaceEditMessage.innerHTML += '<div id="editErrorMessage" class="alert alert-danger text-center">Ad əlavə etmək mütləqdir!!!</div>'
-      console.log(errorWorkspaceEditMessage.innerHTML);
       
-
       setTimeout(() => {
         const errorMessage = document.getElementById('editErrorMessage');
         if (errorMessage) {

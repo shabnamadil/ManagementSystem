@@ -1,21 +1,21 @@
 from django.db import models
 
 from utils.models.base_model import BaseModel
-from .workspace import Workspace
+from .workspace_project import WorkspaceProject
 
-class WorkspaceInvitation(BaseModel):
+class ProjectMemberInvitation(BaseModel):
     email = models.EmailField()
     token = models.CharField(max_length=32, unique=True)
     is_accepted = models.BooleanField(default=False)
-    workspace = models.ForeignKey(
-        Workspace, 
+    project = models.ForeignKey(
+        WorkspaceProject, 
         related_name='invitations', 
         on_delete=models.CASCADE
     )
 
     class Meta:
-        verbose_name = 'Virtual ofis üzv dəvəti'
-        verbose_name_plural = 'Virtual ofis üzv dəvətləri'
+        verbose_name = 'Layihə üzv dəvəti'
+        verbose_name_plural = 'Layihə üzv dəvətləri'
 
     def __str__(self) -> str:
-        return f'DəvətI:{self.workspace} üçün {self.email}-ə'
+        return f'Dəvət:{self.project} üçün {self.email}-ə'

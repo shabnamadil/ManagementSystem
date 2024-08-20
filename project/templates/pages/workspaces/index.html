@@ -11,16 +11,16 @@
                             <div class="d-flex py-2 project-tab flex-wrap w-sm-100">
                                 <button type="button" class="btn btn-dark w-sm-100" data-bs-toggle="modal" data-bs-target="#createworkspace"><i class="icofont-plus-circle me-2 fs-6"></i>Virtual ofis yarat</button>
                             </div>
-                            {% include 'components/modals/create_workspace_modal.html' %}
+                            {% include 'components/modals/workspaces/create_workspace_modal.html' %}
                             {% for workspace in my_workspaces %}
-                            {% include 'components/modals/member_invitation_modal.html' with workspace=workspace %}     
-                            {% include 'components/modals/delete_workspace_modal.html' with workspace=workspace %} 
-                            {% include 'components/modals/edit_workspace_modal.html' with workspace=workspace %}
-                            {% include 'components/modals/delete_workspace_message_modal.html' with workspace=workspace %}  
-                            {% include 'components/modals/create_workspace_message_modal.html' with workspace=workspace %}
-                            {% include 'components/modals/edit_workspace_message_modal.html' with workspace=workspace %}
+                            {% include 'components/modals/workspaces/member_invitation_modal.html' with workspace=workspace %}     
+                            {% include 'components/modals/workspaces/delete_workspace_modal.html' with workspace=workspace %} 
+                            {% include 'components/modals/workspaces/edit_workspace_modal.html' with workspace=workspace %}
+                            {% include 'components/modals/workspaces/delete_workspace_message_modal.html' with workspace=workspace %}  
+                            {% include 'components/modals/workspaces/create_workspace_message_modal.html' with workspace=workspace %}
+                            {% include 'components/modals/workspaces/edit_workspace_message_modal.html' with workspace=workspace %}
                             {% for member in workspace.workspace_members.all %}
-                            {% include 'components/modals/member_role_change_modal.html' with member=member %}
+                            {% include 'components/modals/workspaces/member_role_change_modal.html' with member=member %}
                             {% endfor %}
                             {% endfor %}                   
                         </div>
@@ -57,3 +57,7 @@
             </div>
         </div>
 {% endblock body %}
+
+{% block script %}
+<script src="{% static 'assets/js/api/workspace.js' %}"></script>
+{% endblock script %}

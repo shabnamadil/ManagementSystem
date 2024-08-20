@@ -18,10 +18,16 @@ from .serializers import (
     WorkspaceMemberRemoveSerializer,
     WorkspaceMemberRoleUpdateSerializer,
     ProjectListSerializer,
-    ProjectPostSerializer
+    ProjectPostSerializer,
+    ProjectMemberInvitationSerializer,
+    ProjectMemberRemoveSerializer,
+    ProjectMemberRoleUpdateSerializer
 )
 
-from .repositories import WorkspaceRepository
+from .repositories import (
+    WorkspaceRepository,
+    WorkspaceProjectRepository
+)
 from apps.workspace.models import (
     Workspace,
     WorkspaceCategory,
@@ -81,13 +87,43 @@ class WorkspaceMemberRoleUpdateAPIView(UpdateAPIView):
 class ProjectListCreateAPIView(ListCreateAPIView):
     serializer_class = ProjectListSerializer
     queryset = WorkspaceProject.objects.all()
+    repo = WorkspaceProjectRepository
 
     def get_serializer_class(self):
         if self.request.method == 'POST' :
             self.serializer_class = ProjectPostSerializer
         return super().get_serializer_class()
+    
+    def get_filter_methods(self):
+        repo = self.repo()
+        return {
+            'workspace' : repo.get_by_workspace,
+        }
+
+    def get_queryset(self, **kwargs):
+        filters = self.get_filter_methods()
+        qs = WorkspaceProject.objects.all()
+        for key, value in self.request.query_params.items():
+            if key in filters:
+                qs = filters[key](value, qs)
+        return qs
 
 
 class ProjectRetrieveUpdateDestoryAPIView(RetrieveUpdateDestroyAPIView):
     serializer_class = ProjectPostSerializer
+    queryset = WorkspaceProject.objects.all()
+
+
+class ProjectMemberInviteView(UpdateAPIView):
+    serializer_class = ProjectMemberInvitationSerializer
+    queryset = WorkspaceProject.objects.all()
+
+
+class ProjectMemberRemoveView(UpdateAPIView):
+    serializer_class = ProjectMemberRemoveSerializer
+    queryset = WorkspaceProject.objects.all()
+
+
+class ProjectMemberRoleUpdateAPIView(UpdateAPIView):
+    serializer_class = ProjectMemberRoleUpdateSerializer
     queryset = WorkspaceProject.objects.all()

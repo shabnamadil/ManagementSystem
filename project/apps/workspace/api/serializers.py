@@ -20,7 +20,8 @@ from apps.workspace.models import (
     WorkspaceMember,
     WorkspaceInvitation,
     WorkspaceProject,
-    ProjectMember
+    ProjectMember,
+    ProjectMemberInvitation
 )
 from apps.user.api.serializers import UserListSerializer
 
@@ -154,7 +155,7 @@ class WorkspaceMemberInvitationSerializer(serializers.ModelSerializer):
 
         # Create the invitation link
         current_site = Site.objects.get_current()
-        accept_url = f"http://{ current_site.domain }{reverse_lazy('workspace-accept-invite', kwargs={'uid': uid, 'token': token, 'email': encoded_email})}"
+        accept_url = f"http://{current_site.domain}{reverse_lazy('workspace-accept-invite', kwargs={'uid': uid, 'token': token, 'email': encoded_email})}"
         login_url = f"http://{current_site.domain}{reverse_lazy('login')}"
 
         # Prepare the email content
@@ -315,3 +316,124 @@ class ProjectPostSerializer(ProjectListSerializer):
         )
         
         return project
+    
+
+class ProjectMemberInvitationSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(write_only=True)
+
+    class Meta:
+        model = WorkspaceProject
+        fields = (
+            'id',
+            'email',
+        )
+
+    def validate(self, attrs):
+        request = self.context['request']
+        email = attrs.get('email')
+        project = self.instance
+        inviter = request.user
+
+        if not email:
+            raise serializers.ValidationError("Email is required.")
+
+        if self.instance.project_members.all():
+            for member in self.instance.project_members.all():
+                if member and member.user.email == email:
+                    raise serializers.ValidationError("This user is already a member of the workspace.")
+
+        # Generate the unique token
+        token = get_random_string(length=32)
+        uid = urlsafe_base64_encode(force_bytes(project.id))
+        encoded_email = urlsafe_base64_encode(force_bytes(email))
+
+        # Create the invitation link
+        current_site = Site.objects.get_current()
+        accept_url = f"http://{ current_site.domain }{reverse_lazy('project-accept-invite', kwargs={'uid': uid, 'token': token, 'email': encoded_email})}"
+        login_url = f"http://{ current_site.domain }{reverse_lazy('login')}"
+
+        # Prepare the email content
+        context = {
+            'project': project,
+            'inviter': inviter,
+            'accept_url': accept_url,
+            'is_login' : User.objects.filter(email=email).exists(),
+            'login_url': login_url
+        }
+        subject = f"{inviter} sizi '{project.title}' layihəsinə qoşulmağa dəvət edir."
+        message = render_to_string('components/mail/project_invite.html', context)
+
+        # Send the email
+        send_mail(
+            subject,
+            message,
+            settings.DEFAULT_FROM_EMAIL,
+            [email],
+            fail_silently=False,
+            html_message=message,
+        )
+
+        # Save the token in the database
+        ProjectMemberInvitation.objects.create(project=project, email=email, token=token)
+
+        return attrs
+    
+
+class ProjectMemberRemoveSerializer(serializers.ModelSerializer):
+    member = serializers.IntegerField()
+
+    class Meta:
+        model = WorkspaceProject
+        fields = (
+            'id',
+            'project_members',
+            'member'
+            
+        )
+
+    def validate(self, attrs):
+        member_id = attrs.get('member')
+        project = self.instance
+        
+        try:
+            member = project.project_members.get(id=member_id)
+        except ProjectMember.DoesNotExist:
+            raise serializers.ValidationError("This user is not a member of the workspace.")
+
+        member.delete()
+        
+        return attrs
+
+
+class ProjectMemberRoleUpdateSerializer(serializers.ModelSerializer):
+    ROLE_CHOICES = [
+        ('Adi üzv', 'Adi üzv'),
+        ('Moderator', 'Moderator'),
+        ('Admin', 'Admin'),
+    ]
+    member = serializers.IntegerField()
+    role = serializers.ChoiceField(choices=ROLE_CHOICES)
+
+    class Meta:
+        model = WorkspaceProject
+        fields = (
+            'id',
+            'project_members',
+            'member',
+            'role'
+            
+        )
+
+    def validate(self, attrs):
+        member_id = attrs.get('member')
+        role = attrs.get('role')
+        project = self.instance
+        
+        try:
+            member = project.project_members.get(id=member_id)
+            member.role = role
+            member.save()
+        except ProjectMember.DoesNotExist:
+            raise serializers.ValidationError("This user is not a member of the workspace.")
+        
+        return attrs

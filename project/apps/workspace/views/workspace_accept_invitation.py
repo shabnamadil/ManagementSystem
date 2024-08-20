@@ -16,7 +16,7 @@ from ..models import (
 User = get_user_model()
 
 
-def accept_invitation(request, uid, email, token):
+def workspace_accept_invitation(request, uid, email, token):
     try:
         workspace_id = urlsafe_base64_decode(uid).decode()
         decoded_email = urlsafe_base64_decode(email).decode()
@@ -33,6 +33,6 @@ def accept_invitation(request, uid, email, token):
         invitation.save()
 
         # return redirect('workspace-detail', pk=workspace.id)  # Redirect to the workspace page
-        return render(request, 'components/mail/member_accept.html')
+        return render(request, 'components/mail/workspace_member_accept.html')
     except (TypeError, ValueError, OverflowError, IntegrityError, Workspace.DoesNotExist, WorkspaceInvitation.DoesNotExist):
         return HttpResponse("Invalid invitation link", status=400)

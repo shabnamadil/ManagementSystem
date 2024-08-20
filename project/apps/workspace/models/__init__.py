@@ -25,3 +25,7 @@ from .workspace_invitation import (
 from .project_members import (
     ProjectMember
 )
+
+from .project_invitation import (
+    ProjectMemberInvitation
+)

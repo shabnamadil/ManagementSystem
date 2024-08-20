@@ -5,12 +5,14 @@ from django.utils.safestring import mark_safe
 
 from .models import (
     Workspace,
-    WorkspaceProject,
     WorkspaceCategory,
     Task,
     WorkspaceMember,
     WorkspaceInvitation,
-    ProjectMember
+    WorkspaceProject,
+    ProjectMember,
+    ProjectMemberInvitation
+
 )
 
 
@@ -228,8 +230,28 @@ class ProjetctMemberAdmin(admin.ModelAdmin):
 class WorkspaceinvitationAdmin(admin.ModelAdmin):
     list_display = ('email', 'workspace', 'is_accepted', 'created_date')
     list_filter = ('is_accepted', 'workspace')
-    search_fields = ('email', 'workspace__tiele')
+    search_fields = ('email', 'workspace__title')
     readonly_fields = ('email', 'workspace', 'is_accepted', 'token')
+    ordering = ('-created',)
+    list_per_page = 20
+    date_hierarchy = 'created'
+
+    # def has_add_permission(self, request, obj=None):
+    #     return False 
+
+    # def has_delete_permission(self, request, obj=None):
+    #     return False 
+
+    # def has_change_permission(self, request, obj=None):
+    #     return False
+
+
+@admin.register(ProjectMemberInvitation)
+class ProjectMemberInvitationAdmin(admin.ModelAdmin):
+    list_display = ('email', 'project', 'is_accepted', 'created_date')
+    list_filter = ('is_accepted', 'project')
+    search_fields = ('email', 'project__title')
+    readonly_fields = ('email', 'project', 'is_accepted', 'token')
     ordering = ('-created',)
     list_per_page = 20
     date_hierarchy = 'created'
