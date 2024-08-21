@@ -21,7 +21,9 @@ from apps.workspace.models import (
     WorkspaceInvitation,
     WorkspaceProject,
     ProjectMember,
-    ProjectMemberInvitation
+    ProjectMemberInvitation,
+    Task,
+    TaskAssignedMember
 )
 from apps.user.api.serializers import UserListSerializer
 
@@ -437,3 +439,64 @@ class ProjectMemberRoleUpdateSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("This user is not a member of the workspace.")
         
         return attrs
+    
+
+class TaskAssignedMemberListSerializer(serializers.ModelSerializer):
+    user = UserListSerializer()
+
+    class Meta:
+        model = TaskAssignedMember
+        fields = (
+            'id',
+            'user',
+            'role'
+        )
+
+
+class TaskListSerializer(serializers.ModelSerializer):
+    task_creator = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Task
+        fields = (
+            'id',
+            'title',
+            'description',
+            'content',
+            'file',
+            'task_creator',
+            'project',
+            'started_date',
+            'deadline'
+        )
+
+    def get_task_creator(self, obj):
+        if obj.task_creator.get_full_name():
+            return obj.task_creator.get_full_name()
+        return 'Admin User'
+    
+
+class TaskPostSerializer(TaskListSerializer):
+    task_creator = serializers.PrimaryKeyRelatedField(read_only=True)
+    task_assigned_members = serializers.SerializerMethodField()
+
+    def validate(self, attrs):
+        request = self.context['request']
+        if not self.instance:
+            attrs['task_creator'] = request.user
+        return super().validate(attrs)
+    
+    def create(self, validated_data):
+        task_creator = validated_data.pop('task_creator')
+        task = Task.objects.create(**validated_data, task_creator=task_creator)
+        
+        TaskAssignedMember.objects.create(
+            user=task_creator, 
+            role=TaskAssignedMember.ROLE_CHOICES[2][1],
+            task=task
+        )
+        
+        return task
+
+    def get_task_assigned_members(self, obj):
+        return TaskAssignedMemberListSerializer(obj.task_assigned_members.all(), many=True).data

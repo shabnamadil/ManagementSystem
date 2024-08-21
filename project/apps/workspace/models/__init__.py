@@ -29,3 +29,7 @@ from .project_members import (
 from .project_invitation import (
     ProjectMemberInvitation
 )
+
+from .task_assigned import (
+    TaskAssignedMember
+)

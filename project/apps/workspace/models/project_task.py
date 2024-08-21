@@ -14,8 +14,10 @@ class Task(BaseModel):
         'Başlıq',
         max_length=200,
     )
+    description = models.TextField(
+        'Qısa təsvir'
+    )
     content = models.TextField(
-        null=True, blank=True,
         verbose_name='Tapşırığın mətni'
     )
     file = models.FileField(
@@ -25,19 +27,17 @@ class Task(BaseModel):
     task_creator = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='client_project_tasks',
-        verbose_name='Taskı əlavə etdi'
-    )
-    task_assigned_to = models.ManyToManyField(
-        User,
         related_name='project_tasks',
-        verbose_name='Taskı yerinə yetirməlidir'
+        verbose_name='Taskı əlavə etdi'
     )
     project = models.ForeignKey(
         WorkspaceProject,
         on_delete=models.CASCADE,
         related_name='project_tasks',
-        verbose_name='Müştəri layihəsi'
+        verbose_name='Layihə'
+    )
+    started_date = models.DateTimeField(
+        'Tapşırığın başlama vaxtı'
     )
     deadline = models.DateTimeField(
         'Taskın bitmə tarixi'
