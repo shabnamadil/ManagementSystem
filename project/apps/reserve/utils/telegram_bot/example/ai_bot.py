@@ -2,12 +2,11 @@ from openai import OpenAI
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, CallbackContext
 
-from ...utils.bot_utils import get_bot_token
 # OpenAI API anahtarınızı buraya ekleyin
 
 class AIChatBot:
-    def __init__(self):
-        self.token = get_bot_token()
+    def __init__(self, token):
+        self.token = token
         self.ai_api_key = "sk-proj-ZqZkdQ7befcALBFP9vexT3BlbkFJp9dB6nEwuFhyFuMhUvum"
         self.application = Application.builder().token(self.token).build()
         self.client = OpenAI(api_key = self.ai_api_key)

@@ -4,17 +4,16 @@ import logging
 import os
 
 from utils.telegram_bot.base_class import BaseTelegramBot
-from ...utils.bot_utils import get_bot_token
 
 # Set up logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 class CarInfoBot(BaseTelegramBot):
-    def __init__(self):
+    def __init__(self, token):
         """
         Initializes the CarInfoBot by calling the constructor of BaseTelegramBot.
         """
-        super().__init__(token = get_bot_token())
+        super().__init__(token = token)
 
     async def start(self, update: Update, context: CallbackContext):
         """
