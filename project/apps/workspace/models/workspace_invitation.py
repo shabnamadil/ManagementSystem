@@ -14,8 +14,8 @@ class WorkspaceInvitation(BaseModel):
     )
 
     class Meta:
-        verbose_name = 'Üzv dəvəti'
-        verbose_name_plural = 'Üzv dəvətləri'
+        verbose_name = 'Virtual ofis üzv dəvəti'
+        verbose_name_plural = 'Virtual ofis üzv dəvətləri'
 
     def __str__(self) -> str:
         return f'DəvətI:{self.workspace} üçün {self.email}-ə'

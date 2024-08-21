@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.urls import reverse_lazy
 
 from utils.models.base_model import BaseModel
 from utils.slugify.custom_slugify import custom_slugify
@@ -66,6 +67,9 @@ class Workspace(BaseModel):
         if not self.slug:
             self.slug = custom_slugify(self.title)
         super(Workspace, self).save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse_lazy("workspace-detail", args=[self.slug])
 
     def __str__(self) -> str:
         return self.title
