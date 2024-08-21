@@ -46,7 +46,6 @@
     <!-- Jquery Page Js -->
     <script src="https://www.pixelwibes.com/template/my-task/html/js/template.js"></script>
     <script src="https://www.pixelwibes.com/template/my-task/html/js/page/hr.js"></script>
-    <script src="{% static 'assets/js/api/workspace.js' %}"></script>
     <script>
         const requestUserSlug = "{{request.user.slug}}"
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
@@ -54,6 +53,8 @@
             return new bootstrap.Tooltip(tooltipTriggerEl)
         })
     </script>
+    {% block script %}
+    {% endblock script %}
 </body>
 
 </html>

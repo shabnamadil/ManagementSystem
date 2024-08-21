@@ -27,6 +27,7 @@ CUSTOM_APPS = [
     'apps.workspace.apps.WorkspaceConfig',
     'apps.user.apps.UserConfig',
     'apps.reserve.apps.ReserveConfig',
+    'apps.notification.apps.NotificationConfig',
 ]
 
 THIRD_PARTY_APPS = [
