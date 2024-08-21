@@ -12,7 +12,7 @@ django-crispy-forms==1.14.0
 django-tailwind
 
 Pillow
-file-validator
+file-validator 
 python-dotenv
 drf-yasg
 transliterate
@@ -21,6 +21,17 @@ python-telegram-bot
 openai
 setuptools
 celery
+beautifulsoup4
+
+moviepy
+easyocr
+librosa
+opencv-python
+numpy
+scikit-image
+imagehash 
+instaloader
+twilio
 
 #deploy
 gunicorn
