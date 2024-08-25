@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from .notification_type import NotificationType
 from .notification_channel import NotificationChannel
-from ..utils.constants.choices import NOTIFICATION_STATUS_CHOICES
+from utils.constants.choices import NOTIFICATION_STATUS_CHOICES
 
 User = get_user_model()
 

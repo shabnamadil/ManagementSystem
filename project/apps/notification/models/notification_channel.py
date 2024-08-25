@@ -1,5 +1,5 @@
 from django.db import models
-from ..utils.constants.choices import CHANNEL_CHOICES
+from utils.constants.choices import CHANNEL_CHOICES
 
 class NotificationChannel(models.Model):
     """

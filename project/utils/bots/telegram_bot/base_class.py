@@ -6,9 +6,6 @@ from telegram import Update
 import logging
 
 from telegram.ext import ContextTypes, CommandHandler
-from django.contrib.contenttypes.models import ContentType
-from apps.notification.models import UserNotificationSettings, NotificationChannel, NotificationType
-from apps.notification.models import TelegramSettings, Bot as CustomBot
 
 from django.contrib.auth import get_user_model
 
@@ -72,56 +69,8 @@ class BaseTelegramBot:
         """
         Handles the /start command and registers the user's chat ID.
         """
-        user = update.effective_user
-        chat_id = update.effective_chat.id
-        username = user.username  # Telegram username
 
-        is_group_chat = update.effective_chat.type == 'group' or update.effective_chat.type == 'supergroup'
-        group_chat_name = update.effective_chat.title if is_group_chat else None
-
-        try:
-            # Find or create the user associated with the bot's token asynchronously
-            bot = await sync_to_async(CustomBot.objects.select_related('user').get)(token=self.token)
-            user_obj = bot.user
-
-            # Find or create the Telegram channel asynchronously
-            telegram_channel, _ = await sync_to_async(NotificationChannel.objects.get_or_create)(name='telegram')
-
-            # Find or create the default notification type asynchronously (e.g., 'scheduled_post')
-            notification_type, _ = await sync_to_async(NotificationType.objects.get_or_create)(name='scheduled_post')
-
-            print("Fetching or creating Telegram settings...")
-            # Create or update the Telegram settings asynchronously
-            telegram_settings, created = await sync_to_async(TelegramSettings.objects.get_or_create)(
-                chat_id=chat_id,
-                defaults={
-                    'is_group_chat': is_group_chat,
-                    'group_chat_name': group_chat_name,
-                    'username': username,  # Save the username
-                }
-            )
-            print(f"Created: {created}")
-
-            # Update or create the user's notification settings asynchronously
-            content_type = await sync_to_async(ContentType.objects.get_for_model)(TelegramSettings)
-            setting, _ = await sync_to_async(UserNotificationSettings.objects.update_or_create)(
-                user=user_obj,
-                notification_type=notification_type,
-                channel=telegram_channel,
-                defaults={
-                    'content_type': content_type,
-                    'object_id': telegram_settings.id,
-                    'is_active': True
-                }
-            )
-            print(f"Notification settings: {setting}")
-
-            await update.message.reply_text('Bot is running! Your chat ID has been registered.')
-
-        except Exception as e:
-            print(f"An error occurred: {str(e)}")
-            raise
-
+        await update.message.reply_text('Hello bot')
 
    
     def setup(self):

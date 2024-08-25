@@ -2,7 +2,8 @@ from django.template import Template, Context
 from django.utils.decorators import classonlymethod
 from django.db.models import F
 from asgiref.sync import sync_to_async
-from ...models import NotificationType, UserNotificationSettings, Bot, SentNotification
+from ...models import NotificationType, UserNotificationSettings, SentNotification
+from apps.bot.models.bot import Bot
 
 class TemplateRenderer:
     """
@@ -56,7 +57,9 @@ class NotificationService:
                 elif user_channel.channel.name == 'email':
                     recipient_id = user_channel.channel_settings.email_address
 
-                await self._send_notification_and_log(channel, user_channel.user, content, recipient_id, notification_type)
+                await self._send_notification_and_log(channel, user_channel.user,
+                                                       content, recipient_id,
+                                                         notification_type)
 
     async def _get_channel_and_recipient(self, user_channel):
         """
