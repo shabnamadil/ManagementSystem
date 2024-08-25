@@ -1,5 +1,5 @@
 from django.db import models
-from ..utils.constants.choices import NOTIFICATION_TYPE_CHOICES
+from utils.constants.choices import NOTIFICATION_TYPE_CHOICES
 
 class NotificationType(models.Model):
     """

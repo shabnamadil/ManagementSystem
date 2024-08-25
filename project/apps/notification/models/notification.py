@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
-from ..utils.constants.choices import NOTIFICATION_TYPE_CHOICES, CHANNEL_CHOICES, NOTIFICATION_STATUS_CHOICES
+from utils.constants.choices import NOTIFICATION_TYPE_CHOICES, CHANNEL_CHOICES, NOTIFICATION_STATUS_CHOICES
 
 User = get_user_model()
 

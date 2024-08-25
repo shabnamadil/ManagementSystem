@@ -24,7 +24,6 @@ class ScheduledPostChecker:
             status='scheduled'
         )
 
-        notification_service = NotificationService()
 
         for schedule in unpublished_schedules:
             checker = self.checkers.get(schedule.platform.name)
@@ -34,10 +33,7 @@ class ScheduledPostChecker:
 
                     # If the post status changed to 'published' or 'failed', send notifications
                     if schedule.status in ['published', 'failed']:
-                        notification_service.create_and_send_notifications_for_scheduled_post(
-                            schedule, 
-                            schedule.get_status_display().upper()  # Get the human-readable status
-                        )
+                        print(schedule.status)
                 except Exception as e:
                     # Handle any potential errors during the publishing check
                     logging.error(f"Error checking scheduled post {schedule.id}: {e}")

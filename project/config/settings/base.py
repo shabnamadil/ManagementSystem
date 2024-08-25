@@ -28,6 +28,7 @@ CUSTOM_APPS = [
     'apps.user.apps.UserConfig',
     'apps.reserve.apps.ReserveConfig',
     'apps.notification.apps.NotificationConfig',
+    'apps.bot.apps.BotConfig',
 ]
 
 THIRD_PARTY_APPS = [

@@ -4,7 +4,7 @@ from .models import (
     NotificationChannel,
     UserNotificationSettings,
     SentNotification,
-    TelegramSettings
+    TelegramSettings,
 )
 
 class UserNotificationSettingsAdmin(admin.ModelAdmin):
