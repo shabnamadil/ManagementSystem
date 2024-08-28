@@ -5,7 +5,7 @@
             <h5 class="modal-title  fw-bold" id="editprojectLabel"> Rol dəyiş</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form method="patch" action="{% url 'workspace-detail' member.project.workspace.slug %}" id="editProjectMemberRole-{{member.id}}">
+        <form method="patch" action="{{member.project.workspace.get_absolute_url}}" id="editProjectMemberRole-{{member.id}}">
             {% csrf_token %}
             <div class="modal-body">
                 <div class="mb-3">

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load static %}
+{% block body %}
+        <!-- Body: Body -->
+        <div class="body d-flex py-lg-3 py-md-2">
+            <div class="container-xxl">
+                <div class="row align-items-center">
+                    <div class="border-0 mb-4">
+                        <div class="card-header p-0 no-bg bg-transparent d-flex align-items-center px-0 justify-content-between border-bottom flex-wrap">
+                            <h4>{{project.title}}</h4>
+                            <h3 class="fw-bold py-3 mb-0">Tasks</h3>
+                            <div class="d-flex py-2 project-tab flex-wrap w-sm-100">
+                                <button type="button" class="btn btn-dark w-sm-100" data-bs-toggle="modal" data-bs-target="#createtask"><i class="icofont-plus-circle me-2 fs-6"></i>Task yarat</button>
+                            </div>
+                            <div id="day"></div>
+                            <div id="calendar"></div>
+
+                            {% include 'components/modals/tasks/create_task_modal.html' with project=project %}
+                            {% for task in project.project_tasks.all %}
+                            {% include 'components/modals/tasks/task_member_invitation_modal.html' with task=task %}     
+                            {% include 'components/modals/tasks/delete_task_modal.html' with task=task %} 
+                            {% include 'components/modals/tasks/edit_task_modal.html' with task=task %}
+                            <!-- {% include 'components/modals/workspaces/delete_workspace_message_modal.html' with workspace=workspace %}  
+                            {% include 'components/modals/workspaces/create_workspace_message_modal.html' with workspace=workspace %}
+                            {% include 'components/modals/workspaces/edit_workspace_message_modal.html' with workspace=workspace %}
+                            {% for member in workspace.workspace_members.all %}
+                            {% include 'components/modals/workspaces/member_role_change_modal.html' with member=member %} -->
+                            <!-- {% endfor %} -->
+                            {% endfor %}                   
+                        </div>
+                    </div>
+                </div> <!-- Row end  -->
+                <div class="row align-items-center">
+                    <div class="col-lg-12 col-md-12 flex-column">
+                        <div class="tab-content mt-4">
+                            <div class="tab-pane fade show active" id="All-list">
+                                <div class="row g-3 gy-5 py-3 row-deck mt-3" id="project_tasks">
+
+                                </div>
+                                <div id="sharing_tasks">
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+{% endblock body %}
+
+{% block script %}
+<script src="{% static 'assets/js/api/tasks.js' %}"></script>
+<script>
+    const project = "{{project.slug}}"
+</script>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
+{% endblock script %}

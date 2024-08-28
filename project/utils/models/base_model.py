@@ -1,4 +1,6 @@
 from django.db import models
+from django.utils import timezone
+
 
 class BaseModel(models.Model):
     """All models extends this model"""
@@ -10,4 +12,5 @@ class BaseModel(models.Model):
 
     @property
     def created_date(self):
-        return self.created.strftime('%d/%m/%Y, %H:%M')
+        local_created = timezone.localtime(self.created)
+        return local_created.strftime('%d/%m/%Y, %H:%M')

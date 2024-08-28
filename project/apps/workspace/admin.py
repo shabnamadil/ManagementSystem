@@ -6,15 +6,18 @@ from django.utils.safestring import mark_safe
 from .models import (
     Workspace,
     WorkspaceCategory,
-    Task,
     WorkspaceMember,
     WorkspaceInvitation,
     WorkspaceProject,
     ProjectMember,
-    ProjectMemberInvitation
-
+    ProjectMemberInvitation,
+    Task,
+    Subtask,
+    TaskAssignedMember
 )
 
+admin.site.register(Subtask)
+admin.site.register(TaskAssignedMember)
 
 @admin.action(description="Make banned selected workspaces")
 def make_ban(self, request, queryset):
@@ -136,7 +139,7 @@ class TaskAdmin(admin.ModelAdmin):
     list_display = (
         'title', 'display_content',
         'project', 'display_assigned_to',
-        'display_deadline'
+        'completed_percent', 'display_deadline'
     )
     list_filter = ('created', 'deadline')
     search_fields = (
@@ -163,7 +166,7 @@ class TaskAdmin(admin.ModelAdmin):
     display_content.short_description = 'Qısa təsvir'
 
     def display_assigned_to(self, obj):
-        assigned_users = [user.email for user in obj.task_assigned_to.all()]
+        assigned_users = [user.user.email for user in obj.assigned_members.all()]
         return assigned_users
     display_assigned_to.short_description = 'Taskı yerinə yetirməlidir'
 

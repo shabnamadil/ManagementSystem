@@ -16,7 +16,7 @@ class TaskAssignedMember(BaseModel):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='project_members',
+        related_name='assigned_members',
         verbose_name='İstifadəçi'
     )
     role = models.CharField(
@@ -27,7 +27,7 @@ class TaskAssignedMember(BaseModel):
     task = models.ForeignKey(
         Task,
         on_delete=models.CASCADE,
-        related_name='task_assigned_members',
+        related_name='assigned_members',
         verbose_name='Task'
     )
 

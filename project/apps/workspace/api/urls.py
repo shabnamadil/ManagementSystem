@@ -11,7 +11,15 @@ from .views import (
     ProjectRetrieveUpdateDestoryAPIView,
     ProjectMemberInviteView,
     ProjectMemberRemoveView,
-    ProjectMemberRoleUpdateAPIView
+    ProjectMemberRoleUpdateAPIView,
+    TaskListCreateAPIView,
+    TaskRetriveUpdateDestroyAPIView,
+    TaskCompletedAPIView,
+    TaskAddMemberAPIView,
+    SubtaskListCreateAPIView,
+    SubtaskRetrieveUpdateDestroyAPIView,
+    SubtaskCompletedAPIView,
+    TaskMemberInviteView
 
 )
 
@@ -27,4 +35,12 @@ urlpatterns = [
     path('projects/member/invite/<int:pk>/', ProjectMemberInviteView.as_view(), name='project-member-invite'),
     path('projects/member/remove/<int:pk>/', ProjectMemberRemoveView.as_view(), name='project-member-remove'),
     path('projects/member/role/<int:pk>/', ProjectMemberRoleUpdateAPIView.as_view(), name='project-member-role-update'),
+    path('tasks/', TaskListCreateAPIView.as_view(), name="tasks"),
+    path('tasks/<int:pk>/', TaskRetriveUpdateDestroyAPIView.as_view(), name="task-update-destroy"),
+    path('tasks/completed/<int:pk>/', TaskCompletedAPIView.as_view(), name="task-completed"),
+    path('tasks/member/<int:pk>/', TaskAddMemberAPIView.as_view(), name="task-add-member"),
+    path('tasks/member/invite/<int:pk>/', TaskMemberInviteView.as_view(), name='task-member-invite'),
+    path('subtasks/', SubtaskListCreateAPIView.as_view(), name='subtasks'),
+    path('subtasks/<int:pk>/', SubtaskRetrieveUpdateDestroyAPIView.as_view(), name='subtasks-update-destroy'),
+    path('subtasks/completed/<int:pk>/', SubtaskCompletedAPIView.as_view(), name="subtask-completed"),
 ]

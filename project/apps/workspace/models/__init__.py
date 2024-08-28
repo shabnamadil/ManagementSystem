@@ -33,3 +33,11 @@ from .project_invitation import (
 from .task_assigned import (
     TaskAssignedMember
 )
+
+from .task_invitation import (
+    TaskInvitation
+)
+
+from .subtask import (
+    Subtask
+)
