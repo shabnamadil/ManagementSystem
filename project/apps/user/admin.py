@@ -53,7 +53,7 @@ class UserProfileAdmin(admin.ModelAdmin):
     ordering = ('-updated',)
     date_hierarchy = 'created'
     list_per_page = 20
-    readonly_fields = ('user',)
+    readonly_fields = ('user', 'instagram_username')
 
     def display_user(self, obj):
         url = reverse("admin:user_customuser_change", args=[obj.user.id if obj.user else None])
@@ -73,5 +73,5 @@ class UserProfileAdmin(admin.ModelAdmin):
     def has_add_permission(self, request, obj=None):
         return False 
 
-    def has_change_permission(self, request, obj=None):
-        return False
+    # def has_change_permission(self, request, obj=None):
+    #     return False

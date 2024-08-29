@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model
+from urllib.parse import urlparse
 
 from utils.upload.workspace_client_image_upload import upload_to
 from utils.models.base_model import BaseModel
@@ -70,29 +71,11 @@ class Profile(BaseModel):
     
     @property
     def instagram_username(self):
-        return self._get_username_from_url(self.instagram_link, "https://www.instagram.com/")
-
-    @property
-    def facebook_username(self):
-        return self._get_username_from_url(self.facebook_link, "https://www.facebook.com/")
-
-    @property
-    def tiktok_username(self):
-        return self._get_username_from_url(self.tiktok_link, "https://www.tiktok.com/")
-
-    @property
-    def youtube_username(self):
-        return self._get_username_from_url(self.youtube_link, "https://www.youtube.com/")
-
-    def _get_username_from_url(self, url, platform_base_url):
-        if not url or not url.startswith(platform_base_url):
-            return None
-
-        from urllib.parse import urlparse
-        parsed_url = urlparse(url)
-        path_parts = parsed_url.path.split('/')
-
-        if len(path_parts) > 1:
-            return path_parts[-1]
-
+        if self.instagram_link:
+            parsed_url = urlparse(self.instagram_link)
+            # Assuming the URL format is something like 'https://www.instagram.com/username/'
+            path_segments = parsed_url.path.strip('/').split('/')
+            if path_segments:
+                return path_segments[0]
         return None
+  
