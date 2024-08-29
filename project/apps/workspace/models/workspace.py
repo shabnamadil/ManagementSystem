@@ -69,7 +69,7 @@ class Workspace(BaseModel):
         super(Workspace, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse_lazy("workspace-detail", args=[self.slug])
+        return reverse_lazy("workspace-detail", args=[self.id])
 
     def __str__(self) -> str:
         return self.title

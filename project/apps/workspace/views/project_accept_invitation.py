@@ -33,6 +33,6 @@ def project_accept_invitation(request, uid, email, token):
         invitation.save()
 
         # return redirect('project-detail', pk=project.id)  # Redirect to the project page
-        return render(request, 'components/mail/project_member_accept.html')
+        return render(request, 'components/mail/mail_accepted.html')
     except (TypeError, ValueError, OverflowError, IntegrityError, WorkspaceProject.DoesNotExist, ProjectMemberInvitation.DoesNotExist):
         return HttpResponse("Invalid invitation link", status=400)

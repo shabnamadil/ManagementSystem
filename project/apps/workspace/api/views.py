@@ -3,7 +3,8 @@ from rest_framework.generics import (
     ListCreateAPIView, 
     ListAPIView,
     RetrieveUpdateDestroyAPIView,
-    UpdateAPIView
+    UpdateAPIView,
+    RetrieveUpdateAPIView
 )
 
 from rest_framework.views import APIView
@@ -21,17 +22,29 @@ from .serializers import (
     ProjectPostSerializer,
     ProjectMemberInvitationSerializer,
     ProjectMemberRemoveSerializer,
-    ProjectMemberRoleUpdateSerializer
+    ProjectMemberRoleUpdateSerializer,
+    TaskListSerializer,
+    TaskPostSerializer,
+    TaskCompletedSerializer,
+    TaskAddMemberSerializer,
+    TaskMemberInvitationSerializer,
+    SubtaskListSerializer,
+    SubtaskPostSerializer,
+    SubtaskCompletedSerializer
 )
 
 from .repositories import (
     WorkspaceRepository,
-    WorkspaceProjectRepository
+    WorkspaceProjectRepository,
+    TaskRepository,
+    SubtaskRepository
 )
 from apps.workspace.models import (
     Workspace,
     WorkspaceCategory,
-    WorkspaceProject
+    WorkspaceProject,
+    Task,
+    Subtask
 )
 
 class WorkspaceListCreateAPIView(ListCreateAPIView):
@@ -127,3 +140,85 @@ class ProjectMemberRemoveView(UpdateAPIView):
 class ProjectMemberRoleUpdateAPIView(UpdateAPIView):
     serializer_class = ProjectMemberRoleUpdateSerializer
     queryset = WorkspaceProject.objects.all()
+
+
+class TaskListCreateAPIView(ListCreateAPIView):
+    serializer_class = TaskListSerializer
+    queryset = Task.objects.all()
+    repo = TaskRepository
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST' :
+            self.serializer_class = TaskPostSerializer
+        return super().get_serializer_class()
+    
+    def get_filter_methods(self):
+        repo = self.repo()
+        return {
+            'project' : repo.get_by_project,
+            'date' : repo.get_by_date,
+            'share_date': repo.get_by_sharing_date
+        }
+
+    def get_queryset(self, **kwargs):
+        filters = self.get_filter_methods()
+        qs = Task.objects.all()
+        for key, value in self.request.query_params.items():
+            if key in filters:
+                qs = filters[key](value, qs)
+        return qs
+
+
+class TaskRetriveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
+    serializer_class = TaskPostSerializer
+    queryset = Task.objects.all()
+
+
+class TaskCompletedAPIView(RetrieveUpdateAPIView):
+    serializer_class = TaskCompletedSerializer
+    queryset = Task.objects.all()
+
+
+class TaskAddMemberAPIView(RetrieveUpdateAPIView):
+    serializer_class = TaskAddMemberSerializer
+    queryset = Task.objects.all()
+
+
+class TaskMemberInviteView(UpdateAPIView):
+    serializer_class = TaskMemberInvitationSerializer
+    queryset = Task.objects.all()
+
+
+class SubtaskListCreateAPIView(ListCreateAPIView):
+    serializer_class = SubtaskListSerializer
+    queryset = Subtask.objects.all().order_by('started_date')
+    repo = SubtaskRepository
+
+    def get_serializer_class(self):
+        if self.request.method == 'POST' :
+            self.serializer_class = SubtaskPostSerializer
+        return super().get_serializer_class()
+    
+    def get_filter_methods(self):
+        repo = self.repo()
+        return {
+            'task' : repo.get_by_task,
+        }
+
+    def get_queryset(self, **kwargs):
+        filters = self.get_filter_methods()
+        qs = Subtask.objects.all().order_by('started_date')
+        for key, value in self.request.query_params.items():
+            if key in filters:
+                qs = filters[key](value, qs)
+        return qs
+
+
+class SubtaskRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
+    serializer_class = SubtaskPostSerializer
+    queryset = Subtask.objects.all()
+
+
+class SubtaskCompletedAPIView(RetrieveUpdateAPIView):
+    serializer_class = SubtaskCompletedSerializer
+    queryset = Subtask.objects.all()

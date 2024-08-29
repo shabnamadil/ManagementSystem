@@ -47,14 +47,31 @@ class WorkspaceProject(BaseModel):
     @property
     def truncated_description(self):
         return truncate(self.description)
+    
+    @property
+    def workspace_and_project_members(self):
+        # Using a set to ensure uniqueness of members
+        members = set()
+
+        # Adding workspace members
+        if self.workspace.workspace_members.exists():
+            for member in self.workspace.workspace_members.all():
+                members.add(member.user)
+
+        # Adding project members
+        if self.project_members.exists():
+            for member in self.project_members.all():
+                if member not in members:
+                    members.add(member.user)
+        return list(members)
 
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = custom_slugify(self.title)
         super(WorkspaceProject, self).save(*args, **kwargs)
 
-    # def get_absolute_url(self):
-    #     return reverse_lazy("workspace-detail", args=[self.slug])
+    def get_absolute_url(self):
+        return reverse_lazy("project-detail", args=[self.id])
 
     def __str__(self) -> str:
         return self.title

@@ -1,0 +1,74 @@
+<div class="modal fade" id="edittask-{{task.id}}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title  fw-bold" id="editprojectLabel"> Redaktə edin </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" id="editTaskForm-{{task.id}}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="_method" value="PATCH">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Task Name</label>
+                        <input type="text" class="form-control" name="title" value="{{task.title}}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="formFileMultipleone" class="form-label">File</label>
+                        <input class="form-control" name="file" type="file" id="formFileMultipleone">
+                        {% if task.file %}
+                        <p>Current file: <a href="{{ task.file.url }}" target="_blank">{{ task.file.name }}</a></p>
+                        {% endif %}
+                    </div>                    
+                    <div class="deadline-form mb-3">
+                        <div class="row">
+                            <div class="col">
+                                <label for="datepickerded" class="form-label">Task Start Date</label>
+                                <input type="datetime-local" name="started" value="{{ task.started|date:'Y-m-d\TH:i' }}" class="form-control" id="datepickerded">
+                            </div>
+                            <div class="col">
+                                <label for="datepickerdedone" class="form-label">Task End Date</label>
+                                <input type="datetime-local" name="deadline" value="{{ task.deadline|date:'Y-m-d\TH:i' }}" class="form-control" id="datepickerdedone">
+                            </div>
+                            <div class="col">
+                                <label for="datepickerdedone" class="form-label">Task Share Date</label>
+                                <input type="datetime-local" name="sharing_date" value="{{ task.sharing_date|date:'Y-m-d\TH:i' }}" class="form-control" id="datepickerdedoneshare">
+                            </div>
+                        </div>                        
+                    </div>
+                    <div class="row g-3 mb-3">
+                        <div class="col-sm">
+                            <label class="form-label">Task Priority</label>
+                            <select class="form-select" aria-label="Default select Priority" name="priority">
+                                <option value="Highest" {% if task.priority == 'Highest' %}selected{% endif %}>Highest</option>
+                                <option value="Medium" {% if task.priority == "Medium" %}selected{% endif %}>Medium</option>
+                                <option value="Low" {% if task.priority == "Low" %}selected{% endif %}>Low</option>
+                                <option value="Lowest" {% if task.priority == "Lowest" %}selected{% endif %}>Lowest</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleFormControlTextarea786" class="form-label">Qisa təsvir (optional)</label>
+                        <textarea class="form-control" name="description" id="descriptionTextarea-{{task.id}}" rows="3"
+                            placeholder="Add any extra details about the request">{{task.description}}</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleFormControlTextarea786" class="form-label">Task content</label>
+                        <textarea class="form-control" value="{{task.content}}" name="content" id="contentTextarea-{{task.id}}"  rows="3"
+                            placeholder="Add any extra details about the request">{{task.content}}</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleFormControlTextarea786" class="form-label">Ready content</label>
+                        <textarea class="form-control" value="{{task.ready_content}}" name="ready_content" id="readyContentTextarea-{{task.id}}" rows="3"
+                            placeholder="Add any extra details about the request">{{task.ready_content}}</textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                        id="cancel-task-edit-{{task.id}}">Ləğv et</button>
+                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Təsdiq</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
