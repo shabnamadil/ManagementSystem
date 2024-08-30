@@ -30,7 +30,9 @@ from .serializers import (
     TaskMemberInvitationSerializer,
     SubtaskListSerializer,
     SubtaskPostSerializer,
-    SubtaskCompletedSerializer
+    SubtaskCompletedSerializer,
+    SubtaskAcceptedSerializer,
+    SubtaskAddNoteSerializer
 )
 
 from .repositories import (
@@ -44,7 +46,8 @@ from apps.workspace.models import (
     WorkspaceCategory,
     WorkspaceProject,
     Task,
-    Subtask
+    Subtask,
+    SubtaskStatus
 )
 
 class WorkspaceListCreateAPIView(ListCreateAPIView):
@@ -222,3 +225,13 @@ class SubtaskRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
 class SubtaskCompletedAPIView(RetrieveUpdateAPIView):
     serializer_class = SubtaskCompletedSerializer
     queryset = Subtask.objects.all()
+
+
+class SubtaskAcceptAPIView(RetrieveUpdateAPIView):
+    serializer_class = SubtaskAcceptedSerializer
+    queryset = Subtask.objects.all()
+
+
+class SubtaskAddNoteAPIView(UpdateAPIView):
+    serializer_class = SubtaskAddNoteSerializer
+    queryset = SubtaskStatus.objects.all()

@@ -19,7 +19,9 @@ from .views import (
     SubtaskListCreateAPIView,
     SubtaskRetrieveUpdateDestroyAPIView,
     SubtaskCompletedAPIView,
-    TaskMemberInviteView
+    TaskMemberInviteView,
+    SubtaskAcceptAPIView,
+    SubtaskAddNoteAPIView
 
 )
 
@@ -43,4 +45,7 @@ urlpatterns = [
     path('subtasks/', SubtaskListCreateAPIView.as_view(), name='subtasks'),
     path('subtasks/<int:pk>/', SubtaskRetrieveUpdateDestroyAPIView.as_view(), name='subtasks-update-destroy'),
     path('subtasks/completed/<int:pk>/', SubtaskCompletedAPIView.as_view(), name="subtask-completed"),
+    path('subtasks/accepted/<int:pk>/', SubtaskAcceptAPIView.as_view(), name="subtask-accepted"),
+    path('subtasks/note/<int:pk>/', SubtaskAddNoteAPIView.as_view(), name="subtask-note"),
+
 ]

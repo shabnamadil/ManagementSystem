@@ -190,7 +190,7 @@ async function editTask(formData, task) {
   
     try {
       const response = await fetch(url, {
-        method: 'PATCH',
+        method: 'PUT',
         headers: {
           'X-CSRFToken': csrfToken
         },

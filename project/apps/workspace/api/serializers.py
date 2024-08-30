@@ -26,7 +26,8 @@ from apps.workspace.models import (
     Task,
     TaskAssignedMember,
     TaskInvitation,
-    Subtask
+    Subtask,
+    SubtaskStatus
 )
 from apps.user.api.serializers import UserListSerializer
 
@@ -639,7 +640,7 @@ class TaskCompletedSerializer(TaskListSerializer):
             else:
                 validated_data['completed'] = True
         else:
-            if instance.completed_percent == 100:
+            if all(subtask.completed for subtask in instance.subtasks.all()):
                 validated_data['completed'] = True
             else:
                 validated_data['completed'] = False
@@ -685,8 +686,10 @@ class SubtaskListSerializer(serializers.ModelSerializer):
     subtask_creator = serializers.SerializerMethodField()
     started_date = serializers.SerializerMethodField()
     deadline = serializers.SerializerMethodField()
-    assigned_to = TaskAssignedMemberListSerializer()
     assigned_user = serializers.SerializerMethodField()
+    subtask_task_admin = serializers.SerializerMethodField()
+    status = serializers.SerializerMethodField()
+
     class Meta:
         model = Subtask
         fields = (
@@ -700,7 +703,9 @@ class SubtaskListSerializer(serializers.ModelSerializer):
             'file',
             'completed',
             'assigned_to',
-            'assigned_user'
+            'assigned_user',
+            'subtask_task_admin',
+            'status'
         )
 
     def get_subtask_creator(self, obj):
@@ -719,7 +724,17 @@ class SubtaskListSerializer(serializers.ModelSerializer):
     def get_assigned_user(self, obj):
         if obj.assigned_to:
             return TaskAssignedMemberListSerializer(obj.assigned_to).data
-
+        
+    def get_subtask_task_admin(self, obj):
+        admins = obj.task.assigned_members.filter(role='Admin')
+        return TaskAssignedMemberListSerializer(admins, many=True).data
+    
+    def get_status(self, obj):
+        data = {
+            'status_name' : obj.status.status_name,
+            'status_id' : obj.status.id
+        }
+        return data
 
 class SubtaskPostSerializer(SubtaskListSerializer):
     subtask_creator = serializers.PrimaryKeyRelatedField(read_only=True)
@@ -752,12 +767,15 @@ class SubtaskPostSerializer(SubtaskListSerializer):
 class SubtaskCompletedSerializer(SubtaskListSerializer):
 
     def update(self, instance, validated_data):
-        if instance.completed:
-            validated_data['completed'] = False
+        validated_data['completed'] = not instance.completed
+        instance = super().update(instance, validated_data)
+        task = instance.task
+        if all(subtask.completed for subtask in task.subtasks.all()):
+            task.completed = True
         else:
-            validated_data['completed'] = True
-
-        return super().update(instance, validated_data)
+            task.completed = False
+        task.save()
+        return instance
     
 
 class SubtaskAddMemberSerializer(serializers.ModelSerializer):
@@ -792,4 +810,32 @@ class SubtaskAddMemberSerializer(serializers.ModelSerializer):
             raise ValidationError('This user is already member of this task')
         
         return super().validate(attrs)
+    
+
+class SubtaskAcceptedSerializer(SubtaskListSerializer):
+
+    def update(self, instance, validated_data):
+        if instance.status.status_name == 'In progress':
+            instance.status.status_name = 'Accepted'
+            instance.status.save()
+        return super().update(instance, validated_data)
+    
+
+class SubtaskAddNoteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SubtaskStatus
+        fields = (
+            'id',
+            'note'
+        )
+
+    def update(self, instance, validated_data):
+        if instance.status_name == 'Accepted':
+            instance.status_name = 'In progress'
+            instance.save()
+        if instance.subtask.completed == True:
+            instance.subtask.completed = False
+            instance.subtask.save()
+        return super().update(instance, validated_data)
+
 

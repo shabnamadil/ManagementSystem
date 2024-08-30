@@ -41,3 +41,7 @@ from .task_invitation import (
 from .subtask import (
     Subtask
 )
+
+from .subtask_status import (
+    SubtaskStatus
+)
