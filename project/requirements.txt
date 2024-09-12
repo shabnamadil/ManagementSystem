@@ -24,7 +24,7 @@ celery
 beautifulsoup4
 
 moviepy
-easyocr
+# easyocr
 librosa
 opencv-python
 numpy
