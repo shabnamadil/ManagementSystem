@@ -5,8 +5,10 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('apps.core.urls')),
+    path('', include('web.urls')),
+    path('dashboard/', include('apps.core.urls')),
     path('api/', include('apps.workspace.api.urls')),
+    path("__reload__/", include("django_browser_reload.urls")),
 ]
 
 # Local settings

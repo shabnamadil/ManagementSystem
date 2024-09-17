@@ -1,0 +1,17 @@
+<section class="mt-[177px] max-w-custom mx-auto px-[20px] 2xl:px-0">
+    <div class="flex items-center justify-between">
+        <h3 class="text-[36px] font-[600]">Virtual ofislər</h3>
+        <a class="flex items-center gap-[18px] font-[400] text-[22px]" href="">
+            <span>Daha çox</span>
+            <svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20.7806 12.839L14.0306 19.589C13.8899 19.7298 13.699 19.8088 13.5 19.8088C13.301 19.8088 13.1101 19.7298 12.9694 19.589C12.8286 19.4483 12.7496 19.2574 12.7496 19.0584C12.7496 18.8594 12.8286 18.6685 12.9694 18.5278L18.4397 13.0584H3.75C3.55109 13.0584 3.36032 12.9794 3.21967 12.8387C3.07902 12.6981 3 12.5073 3 12.3084C3 12.1095 3.07902 11.9187 3.21967 11.7781C3.36032 11.6374 3.55109 11.5584 3.75 11.5584H18.4397L12.9694 6.08903C12.8286 5.94829 12.7496 5.75742 12.7496 5.5584C12.7496 5.35938 12.8286 5.16851 12.9694 5.02778C13.1101 4.88704 13.301 4.80798 13.5 4.80798C13.699 4.80798 13.8899 4.88704 14.0306 5.02778L20.7806 11.7778C20.8504 11.8474 20.9057 11.9301 20.9434 12.0212C20.9812 12.1122 21.0006 12.2098 21.0006 12.3084C21.0006 12.407 20.9812 12.5046 20.9434 12.5956C20.9057 12.6867 20.8504 12.7694 20.7806 12.839Z" fill="black" fill-opacity="0.67"/>
+            </svg>
+        </a>
+    </div>
+    <div class="mt-[71px] grid grid-cols-2 gap-[25px]">
+        {% include "components/common/virtual_office/VirtualOfficeItem.html" with color="primary" %}
+
+        {% include "components/common/virtual_office/VirtualOfficeItem.html" with color="secondary" %}
+
+    </div>
+</section>
