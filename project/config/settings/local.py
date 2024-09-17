@@ -4,6 +4,14 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
+MIDDLEWARE += [
+    "django_browser_reload.middleware.BrowserReloadMiddleware",
+]
+
+INSTALLED_APPS += [
+    'django_browser_reload'
+]
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',

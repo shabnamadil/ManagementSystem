@@ -1,0 +1,53 @@
+<header class="lg:hidden">
+    <div class="max-w-custom mx-auto h-[87px] flex justify-between items-center px-[20px]">
+      <!-- Logo -->
+      <div>
+        <img src="{{settings.logo.url}}" alt="Logo" class="h-6">
+      </div>
+      <!-- Mobile Menu Button -->
+        <button id="menu-toggle" class="focus:outline-none">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+          </svg>
+        </button>
+    </div>
+  
+    <!-- Mobile Menu (Initially hidden) -->
+    <nav id="mobile-menu" class="hidden fixed top-0 left-0 w-full h-full bg-white z-50 flex-col items-center justify-center">
+      <!-- Close Button -->
+      <button id="close-menu" class="absolute top-5 right-5 text-2xl">
+        ✖
+      </button>
+      <!-- Menu Links -->
+      <ul class="flex flex-col gap-6 text-center text-lg font-medium">
+        <li><a href="#" class="block py-2 text-primary hover:underline">Ana səhifə</a></li>
+        <li><a href="#" class="block py-2 hover:text-primary">Haqqımızda</a></li>
+        <li><a href="#" class="block py-2 hover:text-primary">Virtual ofislar</a></li>
+        <li><a href="#" class="block py-2 hover:text-primary">Frilanserlər</a></li>
+        <li><a href="#" class="block py-2 hover:text-primary">Bloq</a></li>
+        <li><a href="#" class="block py-2 hover:text-primary">Əlaqə</a></li>
+      </ul>
+      <!-- Authentication Buttons -->
+      <div class="flex flex-col gap-4 mt-8">
+        <a class="border rounded-lg text-center px-6 py-3 text-base font-semibold border-primary hover:bg-primary transition-all" href="">Daxil ol</a>
+        <a class="border rounded-lg text-center px-6 py-3 text-base font-semibold border-primary bg-primary hover:bg-primary-hover transition-all" href="">Qeydiyyat</a>
+      </div>
+    </nav>
+  </header>
+  
+  <script>
+    // Toggle mobile menu visibility
+    const menuToggle = document.getElementById('menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const closeMenu = document.getElementById('close-menu');
+    
+    menuToggle.addEventListener('click', () => {
+      mobileMenu.classList.remove('hidden');
+      mobileMenu.classList.add('flex');
+    });
+    
+    closeMenu.addEventListener('click', () => {
+      mobileMenu.classList.add('hidden');
+      mobileMenu.classList.remove('flex');
+    });
+  </script>

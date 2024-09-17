@@ -1,8 +1,8 @@
 from django.urls import path, include
-from .views.home_page import HomePageView
+from .views.dashboard_page import DashboardPageView
 
 urlpatterns = [
-    path("", HomePageView.as_view(), name = 'home'),
+    path("", DashboardPageView.as_view(), name = 'dashboard'),
     path("workspaces/", include("apps.workspace.urls")),
     path("", include("apps.user.urls"))
     # path('workspaces/', views.WorkspacesPageView.as_view(), name = 'workspaces'),

@@ -1,0 +1,65 @@
+<style>
+    .hover-underline::before {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 4px;
+        bottom: -3px;
+        left: 50%;
+        background-color: #31FFAA;
+        transition: width 0.3s ease, left 0.3s ease;
+      }
+  
+      .hover-underline:hover::before {
+        width: 100%;
+        left: 0;
+      }
+  
+      /* Active link default dot */
+      .active-dot::after {
+        content: '';
+        position: absolute;
+        bottom: -6px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 10px;
+        height: 4px;
+        background-color: #31FFAA;
+        border-radius: 50%;
+      }
+  </style>
+<header class="hidden lg:block mt-[35px] mx-[20px] 2xl:mx-0">
+      <div class="max-w-custom mx-auto border h-[87px] border-primary rounded-[22px] flex justify-between items-center px-[20px]">
+        <div>
+            <img src="{{settings.logo.url}}" alt="">
+        </div>
+        <div>
+            <ul class="flex gap-[36px] font-normal text-[16px]">
+                <!-- Active link with dot -->
+                <li class="relative hover-underline">
+                  <a href="#" class="relative active-dot">Ana səhifə</a>
+                </li>
+                <!-- Other links with hover underline -->
+                <li class="relative hover-underline">
+                  <a href="#">Haqqımızda</a>
+                </li>
+                <li class="relative hover-underline">
+                  <a href="#">Virtual ofislar</a>
+                </li>
+                <li class="relative hover-underline">
+                  <a href="#">Frilanserlər</a>
+                </li>
+                <li class="relative hover-underline">
+                  <a href="#">Bloq</a>
+                </li>
+                <li class="relative hover-underline">
+                  <a href="#">Əlaqə</a>
+                </li>
+              </ul>
+        </div>
+        <div class="flex gap-[16px]">
+          <a class="border rounded-[12px] px-[14px] py-[10px] border-primary hover:bg-primary transition-all" href="">Daxil ol</a>
+          <a class="border rounded-[12px] px-[14px] py-[10px] border-primary bg-primary hover:bg-primary-hover hover:border-primary-hover transition-all" href="">Qeydiyyat</a>
+        </div>
+  </div>
+</header>
