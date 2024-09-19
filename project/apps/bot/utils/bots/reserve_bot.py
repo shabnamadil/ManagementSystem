@@ -116,7 +116,8 @@ class ReserveBot(BaseTelegramBot):
             # 4. Fotoğrafı Analiz Edin (İsteğe Bağlı)
             analyzer = ImageAnalyzer(photo_path)
             extracted_text_data = analyzer.extract_text_from_image()
-            extracted_text = "\n".join([detection[1] for detection in extracted_text_data])
+            # extracted_text = "\n".join([detection[1] for detection in extracted_text_data])
+            extracted_text = "aktivdi easyocr yuklenmelidir sadece"
 
             # 5. Chat kaydını bulun veya oluşturun (sadece kullanıcı bir mesaj gönderdiğinde)
             chat, created = await sync_to_async(Chat.objects.get_or_create)(

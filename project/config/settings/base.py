@@ -29,6 +29,12 @@ CUSTOM_APPS = [
     'apps.reserve.apps.ReserveConfig',
     'apps.notification.apps.NotificationConfig',
     'apps.bot.apps.BotConfig',
+
+    #pages
+    'apps.pages.home.apps.HomeConfig',
+    'apps.pages.about.apps.AboutConfig',
+
+    'theme'
 ]
 
 THIRD_PARTY_APPS = [
@@ -36,6 +42,7 @@ THIRD_PARTY_APPS = [
     'file_validator',
     "corsheaders",
     'drf_yasg',
+    'tailwind',
 
     'rest_framework',
     'rest_framework.authtoken',
@@ -44,7 +51,6 @@ THIRD_PARTY_APPS = [
     'django_celery_beat',
     'django_celery_results',
     'django_extensions',
-    'django_browser_reload',
 
 ]
 
@@ -52,6 +58,11 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + CUSTOM_APPS
 
 SITE_ID=1
 
+TAILWIND_APP_NAME = 'theme'
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
 
 FILE_UPLOAD_HANDLERS = [
     'django.core.files.uploadhandler.TemporaryFileUploadHandler',
@@ -84,6 +95,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'utils.context_processors.extras.extras',
             ],
         },
     },
@@ -136,7 +148,6 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = "media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field

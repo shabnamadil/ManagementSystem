@@ -26,7 +26,7 @@ class Post(models.Model):
     Represents a social media post to be scheduled and published.
     """
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='posts', null=True) 
-    content = models.TextField()
+    content = models.TextField(null = True, blank = True)
     created_at = models.DateTimeField(auto_now_add=True) 
 
     def __str__(self):
