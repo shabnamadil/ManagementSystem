@@ -7,6 +7,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('apps.core.urls')),
     path('api/', include('apps.workspace.api.urls')),
+    path('api/', include('apps.user.api.urls'))
 ]
 
 # Local settings

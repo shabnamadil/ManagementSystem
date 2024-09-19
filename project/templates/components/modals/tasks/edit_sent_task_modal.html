@@ -1,0 +1,35 @@
+<div class="modal fade" id="editsenttask-{{task.id}}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title  fw-bold" id="editprojectLabel"> {{task.title}} </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="{{task.project.get_absolute_url}}" id="editSentTaskForm-{{task.id}}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="hidden" name="_method" value="PUT">
+                <div class="modal-body">
+                    {% if task.file %}
+                    <div class="mb-3">
+                        <label for="" class="form-label">File</label>
+                        <p>Current file: <a href="{{ task.file.url }}" target="_blank">{{ task.file.name }}</a></p>
+                    </div>   
+                    {% endif %}                 
+                    <div class="mb-3">
+                        <label for="exampleFormControlTextarea786" class="form-label">Ready content</label>
+                        <textarea class="form-control" name="ready_content" id="readyContentTextarea-{{task.id}}" rows="3"
+                            placeholder="Add any extra details about the request">{{task.ready_content}}</textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                        id="cancel-sent-client-task-edit-{{task.id}}">Ləğv et</button>
+                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Redaktə et</button>
+                </div>
+                {% for sent_user in task.task_sent_to.all %}
+                <input type="hidden" name="task_sent_to" value="{{sent_user.id}}">
+                {% endfor %}
+            </form>
+        </div>
+    </div>
+</div>

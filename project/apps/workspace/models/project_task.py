@@ -71,6 +71,13 @@ class Task(BaseModel):
         help_text="Bu qismi boş buraxın. Avtomatik doldurulacaq.",
         null=True, blank=True        
     )
+    content_history = models.JSONField(
+        default=list,
+        null=True, blank=True
+    )
+    client_accepted = models.BooleanField(
+        default=False
+    )
 
     class Meta:
         verbose_name = 'Tapşırıq'
@@ -113,6 +120,8 @@ class Task(BaseModel):
 
     def save(self, *args, **kwargs):
         self.slug = custom_slugify(self.title)
+        if self.pk:
+            self.content_history.append(self.ready_content)
         super(Task, self).save(*args, **kwargs)
 
     def __str__(self) -> str:

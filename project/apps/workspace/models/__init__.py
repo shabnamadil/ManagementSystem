@@ -45,3 +45,7 @@ from .subtask import (
 from .subtask_status import (
     SubtaskStatus
 )
+
+from .task_sent_to import (
+    TaskSentTo
+)

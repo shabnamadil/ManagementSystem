@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 async function fetchWorkspaces() {
-  const FETCH_URL = `${BASE_URL}`;
+  const FETCH_URL = `${BASE_URL}?creator=${requestUserSlug}`;
 
   try {
     const response = await fetch(FETCH_URL);

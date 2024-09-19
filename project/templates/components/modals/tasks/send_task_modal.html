@@ -1,0 +1,23 @@
+{% load static %}
+<div class="modal fade" id="sendtask-{{task.id}}" tabindex="-1" aria-labelledby="addProjectMemberLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title  fw-bold" id="addUserLabel">Send to</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <div class="inviteby_email">
+                <form method="post" action="{{task.project.get_absolute_url}}" id="taskSendForm-{{task.id}}">
+                    {% csrf_token %}
+                    <div class="input-group mb-3">
+                        <input type="email" name="email" class="form-control" value="" placeholder="Email address" id="projectMemberEmail" aria-describedby="exampleInputEmail1">
+                        <button class="btn btn-dark" type="submit" id="button-addon2">Sent</button>
+                    </div>
+                    <input type="hidden" name="task" value="{{task.id}}">
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>

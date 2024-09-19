@@ -55,6 +55,9 @@ class TaskRepository:
 
         return qs.filter(sharing_date__date=parsed_date)
     
+    def get_by_send_to(self, user, qs=DEFAULT_QS):
+        return qs.filter(task_sent_to__user__slug=user)
+    
 
 class SubtaskRepository:
     DEFAULT_QS = Subtask.objects.all()

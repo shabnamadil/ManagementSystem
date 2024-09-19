@@ -119,7 +119,6 @@ function createSubtaskCard(subtask) {
 
 async function createSubtask(formData) {
     const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
-    console.log(formData);
     
     try {
       const response = await fetch(BASE_URL, {
@@ -331,9 +330,12 @@ function setSubtaskCompletedBtn(subtask) {
 }
 
 function setSubtaskAcceptedBtn(subtask) {
-  const acceptedSubtaskBtn = document.getElementById(`accept-subtask-${subtask.id}`)
-  acceptedSubtaskBtn.addEventListener('click', function (e) {
-    e.preventDefault()
-    acceptSubtask(subtask)
-  })
+  if (subtask.completed) {
+      const acceptedSubtaskBtn = document.getElementById(`accept-subtask-${subtask.id}`)
+      acceptedSubtaskBtn.addEventListener('click', function (e) {
+        e.preventDefault()
+        acceptSubtask(subtask)
+      })
+  }
+
 }
