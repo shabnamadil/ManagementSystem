@@ -1,3 +1,4 @@
+{% load nav_links %}
 <style>
     .hover-underline::before {
         content: '';
@@ -37,11 +38,11 @@
             <ul class="flex gap-[36px] font-normal text-[16px]">
                 <!-- Active link with dot -->
                 <li class="relative hover-underline">
-                  <a href="#" class="relative active-dot">Ana səhifə</a>
+                  <a href="{% url "home" %}" class="relative {% active_link 'home' %}">Ana səhifə</a>
                 </li>
                 <!-- Other links with hover underline -->
                 <li class="relative hover-underline">
-                  <a href="#">Haqqımızda</a>
+                  <a href="{% url "about" %}" class="relative {% active_link 'about' %}">Haqqımızda</a>
                 </li>
                 <li class="relative hover-underline">
                   <a href="#">Virtual ofislar</a>
@@ -50,10 +51,10 @@
                   <a href="#">Frilanserlər</a>
                 </li>
                 <li class="relative hover-underline">
-                  <a href="#">Bloq</a>
+                  <a href="{% url "blog" %}" class="relative {% active_link 'blog' %}">Bloq</a>
                 </li>
                 <li class="relative hover-underline">
-                  <a href="#">Əlaqə</a>
+                  <a href="{% url "contact" %}" class="relative {% active_link 'contact' %}">Əlaqə</a>
                 </li>
               </ul>
         </div>

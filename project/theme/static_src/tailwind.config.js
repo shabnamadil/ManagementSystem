@@ -35,6 +35,7 @@ module.exports = {
             animation: {
                 marquee: 'marquee 15s linear infinite',
                 marquee2: 'marquee2 15s linear infinite',
+                
               },
             keyframes: {
               marquee: {
@@ -45,7 +46,11 @@ module.exports = {
                 '0%': { transform: 'translateX(100%)' },
                 '100%': { transform: 'translateX(0%)' },
               },
-            }
+              
+            },
+            boxShadow: {
+              custom: '8.11px 14.61px 32.46px 4.87px rgba(19, 21, 23, 0.1)',
+            },
         },
     },
     plugins: [
