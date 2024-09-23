@@ -1,14 +1,17 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.views import View
+from django.views.generic import TemplateView
 
 from ..forms.login import LoginForm
 from utils.mixins.auth import AuthenticatedMixin
 
-class LoginPageView(AuthenticatedMixin, View):
+class LoginPageView(TemplateView):
+    template_name = 'pages/login/login.html'
+
     def get(self, request):
         form = LoginForm()
-        return render(request, 'pages/login/index.html', {'form': form})
+        return render(request, 'pages/login/login.html', {'form': form})
 
     def post(self, request):
         form = LoginForm(request.POST)
@@ -31,4 +34,4 @@ class LoginPageView(AuthenticatedMixin, View):
                 return redirect('home')
             else:
                 form.add_error(None, 'Invalid email or password')
-        return render(request, 'pages/login/index.html', {'form': form})
+        return render(request, 'pages/login/login.html', {'form': form})

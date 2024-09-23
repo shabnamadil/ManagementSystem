@@ -6,6 +6,9 @@ from django.utils.html import format_html
 
 from .models.custom_user import CustomUser
 from .models.user_profile import Profile
+from .models.otp import OTP
+
+admin.site.register(OTP)
 
 
 @admin.action(description="Ban selected users")
@@ -18,11 +21,11 @@ class CustomUserAdmin(BaseUserAdmin):
     ordering = ('email', 'created')
     list_display = ('email', 'first_name', 'last_name', 'is_staff', 'is_active', 'is_banned', 'is_verified')
     list_filter = ('is_staff', 'is_active', 'is_verified')
-    readonly_fields = ('slug', 'otp')
+    readonly_fields = ('slug', )
     actions = (make_ban,)
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        ('Personal info', {'fields': ('first_name', 'last_name', 'slug', 'otp')}),
+        ('Personal info', {'fields': ('first_name', 'last_name', 'slug')}),
         ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'is_banned', 'is_verified', 'user_permissions', 'groups')}),
         ('Important dates', {'fields': ('last_login', 'date_joined')}),
     )

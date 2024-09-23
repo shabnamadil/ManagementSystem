@@ -22,7 +22,6 @@ class CustomUser(AbstractUser, BaseModel):
         default=False
     )
     is_verified = models.BooleanField(default=False)
-    otp = models.CharField(max_length=6, blank=True, null=True)
 
     objects = CustomUserManager()
 

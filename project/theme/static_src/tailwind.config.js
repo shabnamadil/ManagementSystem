@@ -22,6 +22,7 @@ module.exports = {
         extend: {
             fontFamily: {
                 sans: ['Work Sans', 'sans-serif'], // Burada Work Sans fontunu tanımlıyoruz
+                DMSans: ['DM Sans', 'sans-serif'],
               },
             colors: {
               primary: '#31FFAA', 
