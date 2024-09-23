@@ -2,11 +2,12 @@ from django.urls import path, re_path
 
 from .views.login_page import LoginPageView
 from .views.logout import logout_view
-from .views.account_activation import activate
+from .views.register_page import RegisterPageView
+from .views.verify_register import VerifyRegisterPageView
 
 urlpatterns = [
     path("login/", LoginPageView.as_view(), name = 'login'),
+    path("register/", RegisterPageView.as_view(), name = 'register'),
+    path("verify/", VerifyRegisterPageView.as_view(), name = 'verify'),
     path('logout/', logout_view, name = "logout"),
-    re_path(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,2033})/$', 
-        activate, name='activate'),
 ]

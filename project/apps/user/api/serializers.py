@@ -9,6 +9,8 @@ from rest_framework import serializers
 
 from utils.serializers.password_field import PasswordField
 from ..tokens import account_activation_token
+from utils.otp.generate_otp import generate_otp
+from utils.otp.send_otp import send_otp_email
 
 User = get_user_model()
 
@@ -57,14 +59,8 @@ class RegisterSerializer(serializers.ModelSerializer):
         )
         user.set_password(validated_data['password'])
         user.is_active = False
+        otp = generate_otp()
+        user.otp = otp
         user.save()
-        current_site = Site.objects.get_current()
-        subject = 'Activate TaskFries Account'
-        message = render_to_string('components/mail/account_activation_email.html', {
-            'user': user,
-            'domain': current_site.domain,
-            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-            'token': account_activation_token.make_token(user),
-        })
-        user.email_user(subject, message)
+        send_otp_email(user.email, otp)
         return user
