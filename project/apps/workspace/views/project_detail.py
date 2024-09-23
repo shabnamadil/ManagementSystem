@@ -12,7 +12,7 @@ class ProjectDetailView(DetailView, LoginRequiredMixin):
     template_name = 'pages/workspaces/components/projects/project-detail.html'
     context_object_name = 'project'
 
-    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+    def get_context_data(self, **kwargs):
         cx = super().get_context_data(**kwargs)
         request_user = self.request.user 
         cx['sent_tasks'] = Task.objects.filter(task_sent_to__user=request_user)
