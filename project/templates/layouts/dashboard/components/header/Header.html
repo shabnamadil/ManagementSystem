@@ -1,0 +1,24 @@
+{% load star_rating %}
+
+<header class="flex justify-end items-center gap-[44px] mb-6">
+    <div class="flex space-x-[16px]">
+        <button class="bg-[#BFFFE5] text-black flex gap-[8px] items-center px-[16px] py-[10px] font-[500] rounded-full">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 6.75H6.75V12H5.25V6.75H0V5.25H5.25V0H6.75V5.25H12V6.75Z" fill="#252831"/>
+            </svg>
+            <span>Virtual ofis yarat</span>
+        </button>
+      <button class="bg-primary text-black px-[16px] py-[10px] font-[500] rounded-full">Üzv olduğum virtual ofislar</button>
+      <button class="bg-[#BFFFE5] text-black px-[16px] py-[10px] font-[500] rounded-full">Mənim virtual ofislarim</button>
+    </div>
+    <div class="flex items-center gap-[12px]">
+      <img class="h-[64px] w-[64px] rounded-full" src="https://img.freepik.com/free-photo/portrait-man-laughing_23-2148859448.jpg?size=338&ext=jpg&ga=GA1.1.2008272138.1727049600&semt=ais_hybrid" alt="Profile">
+      <div>
+        <p class="font-[500] text-[20px] text-[#252831]">Ayaz Samadov</p>
+        <p class="font-[500] text-[14px] text-[#7E7E7E]">Product Designer</p>
+        <div class="flex gap-[2px]">
+            {% rating rating=4 total=5 %}
+        </div>
+    </div>
+    </div>
+</header>
