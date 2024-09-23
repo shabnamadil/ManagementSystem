@@ -35,7 +35,8 @@ module.exports = {
             animation: {
                 marquee: 'marquee 15s linear infinite',
                 marquee2: 'marquee2 15s linear infinite',
-                
+                'spin-slow': 'spin 3s linear infinite', // 3 saniyede bir döner
+                'spin-fast': 'spin 0.5s linear infinite', // 0.5 saniyede bir döner
               },
             keyframes: {
               marquee: {
