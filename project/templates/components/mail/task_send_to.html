@@ -1,0 +1,17 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Send to</title>
+</head>
+<body>
+    <p>Salam,</p>
+    <p>{{ inviter }} sizi <strong>{{ task.title }}</strong> adlı taska nəzər yetirməyə dəvət edir.</p>
+    {% if is_login %}
+    <p><a href="{{ send_url }}">Go to task</a></p>
+    {% else %}
+    <p><a href="{{login_url}}">You need to register website in order to revise task </a></p>
+    {% endif %}
+    <p>If you didn't expect this invitation, you can safely ignore this email.</p>
+</body>
+</html>

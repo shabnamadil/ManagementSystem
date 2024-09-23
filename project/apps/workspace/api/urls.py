@@ -19,7 +19,12 @@ from .views import (
     SubtaskListCreateAPIView,
     SubtaskRetrieveUpdateDestroyAPIView,
     SubtaskCompletedAPIView,
-    TaskMemberInviteView
+    TaskMemberInviteView,
+    SubtaskAcceptAPIView,
+    SubtaskAddNoteAPIView,
+    TaskSendToAPIView,
+    TaskClientEditAPIView,
+    TaskClientAcceptAPIView
 
 )
 
@@ -40,7 +45,13 @@ urlpatterns = [
     path('tasks/completed/<int:pk>/', TaskCompletedAPIView.as_view(), name="task-completed"),
     path('tasks/member/<int:pk>/', TaskAddMemberAPIView.as_view(), name="task-add-member"),
     path('tasks/member/invite/<int:pk>/', TaskMemberInviteView.as_view(), name='task-member-invite'),
+    path('tasks/send/', TaskSendToAPIView.as_view(), name='task-send'),
+    path('tasks/client/edit/<int:pk>/', TaskClientEditAPIView.as_view(), name='task-cleint-edit'),
+    path('tasks/client/accept/<int:pk>/', TaskClientAcceptAPIView.as_view(), name='task-cleint-accept'),
     path('subtasks/', SubtaskListCreateAPIView.as_view(), name='subtasks'),
     path('subtasks/<int:pk>/', SubtaskRetrieveUpdateDestroyAPIView.as_view(), name='subtasks-update-destroy'),
     path('subtasks/completed/<int:pk>/', SubtaskCompletedAPIView.as_view(), name="subtask-completed"),
+    path('subtasks/accepted/<int:pk>/', SubtaskAcceptAPIView.as_view(), name="subtask-accepted"),
+    path('subtasks/note/<int:pk>/', SubtaskAddNoteAPIView.as_view(), name="subtask-note"),
+
 ]

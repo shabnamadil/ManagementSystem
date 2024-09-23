@@ -5,9 +5,10 @@
                 <h5 class="modal-title  fw-bold" id="editprojectLabel"> Redaktə edin </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form method="post" id="editTaskForm-{{task.id}}" enctype="multipart/form-data">
+            <form method="post" action="{{task.project.get_absolute_url}}" id="editTaskForm-{{task.id}}" enctype="multipart/form-data">
                 {% csrf_token %}
-                <input type="hidden" name="_method" value="PATCH">
+                <input type="hidden" name="_method" value="PUT">
+                <input type="hidden" name="project" value="{{task.project.id}}">
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label">Task Name</label>
@@ -54,13 +55,24 @@
                     </div>
                     <div class="mb-3">
                         <label for="exampleFormControlTextarea786" class="form-label">Task content</label>
-                        <textarea class="form-control" value="{{task.content}}" name="content" id="contentTextarea-{{task.id}}"  rows="3"
+                        <textarea class="form-control" name="content" id="contentTextarea-{{task.id}}"  rows="3"
                             placeholder="Add any extra details about the request">{{task.content}}</textarea>
                     </div>
                     <div class="mb-3">
                         <label for="exampleFormControlTextarea786" class="form-label">Ready content</label>
-                        <textarea class="form-control" value="{{task.ready_content}}" name="ready_content" id="readyContentTextarea-{{task.id}}" rows="3"
+                        <textarea class="form-control" name="ready_content" id="readyContentTextarea-{{task.id}}" rows="3"
                             placeholder="Add any extra details about the request">{{task.ready_content}}</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="exampleFormControlTextarea786" class="form-label">Previous content</label>
+                        <textarea class="form-control" name="content_history" id="previousContentTextarea-{{ task.id }}" rows="3"
+                            placeholder="Add any extra details about the request">
+                            {% if task.content_history|length > 1 %}
+                                {{ task.content_history|slice:"-2,-1"|first }}
+                            {% else %}
+                                No previous content available.
+                            {% endif %}
+                        </textarea>
                     </div>
                 </div>
                 <div class="modal-footer">

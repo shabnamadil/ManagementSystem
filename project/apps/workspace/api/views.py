@@ -30,7 +30,12 @@ from .serializers import (
     TaskMemberInvitationSerializer,
     SubtaskListSerializer,
     SubtaskPostSerializer,
-    SubtaskCompletedSerializer
+    SubtaskCompletedSerializer,
+    SubtaskAcceptedSerializer,
+    SubtaskAddNoteSerializer,
+    TaskSendToSerializer,
+    TaskClientEditSerializer,
+    TaskClientAcceptSerializer
 )
 
 from .repositories import (
@@ -44,7 +49,9 @@ from apps.workspace.models import (
     WorkspaceCategory,
     WorkspaceProject,
     Task,
-    Subtask
+    Subtask,
+    SubtaskStatus,
+    TaskSentTo
 )
 
 class WorkspaceListCreateAPIView(ListCreateAPIView):
@@ -157,7 +164,8 @@ class TaskListCreateAPIView(ListCreateAPIView):
         return {
             'project' : repo.get_by_project,
             'date' : repo.get_by_date,
-            'share_date': repo.get_by_sharing_date
+            'share_date': repo.get_by_sharing_date,
+            'sent': repo.get_by_send_to
         }
 
     def get_queryset(self, **kwargs):
@@ -186,6 +194,21 @@ class TaskAddMemberAPIView(RetrieveUpdateAPIView):
 
 class TaskMemberInviteView(UpdateAPIView):
     serializer_class = TaskMemberInvitationSerializer
+    queryset = Task.objects.all()
+
+
+class TaskSendToAPIView(CreateAPIView):
+    serializer_class = TaskSendToSerializer
+    queryset = TaskSentTo.objects.all()
+
+
+class TaskClientEditAPIView(RetrieveUpdateAPIView):
+    serializer_class = TaskClientEditSerializer
+    queryset = Task.objects.all()
+
+
+class TaskClientAcceptAPIView(RetrieveUpdateAPIView):
+    serializer_class = TaskClientAcceptSerializer
     queryset = Task.objects.all()
 
 
@@ -222,3 +245,13 @@ class SubtaskRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
 class SubtaskCompletedAPIView(RetrieveUpdateAPIView):
     serializer_class = SubtaskCompletedSerializer
     queryset = Subtask.objects.all()
+
+
+class SubtaskAcceptAPIView(RetrieveUpdateAPIView):
+    serializer_class = SubtaskAcceptedSerializer
+    queryset = Subtask.objects.all()
+
+
+class SubtaskAddNoteAPIView(UpdateAPIView):
+    serializer_class = SubtaskAddNoteSerializer
+    queryset = SubtaskStatus.objects.all()

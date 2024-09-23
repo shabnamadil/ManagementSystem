@@ -15,7 +15,9 @@
                             {% include 'components/modals/subtasks/create_subtask_modal.html' with task=task %}
                             {% for subtask in task.subtasks.all %}
                             {% include 'components/modals/subtasks/delete_subtask_modal.html' with subtask=subtask %} 
-                            {% include 'components/modals/subtasks/edit_subtask_modall.html' with subtask=subtask %}
+                            {% include 'components/modals/subtasks/edit_subtask_modal.html' with subtask=subtask %}
+                            {% include 'components/modals/subtasks/show_note_modal.html' with subtask=subtask %}
+                            {% include 'components/modals/subtasks/add_note_modal.html' with subtask=subtask %}
                             <!-- {% include 'components/modals/workspaces/delete_workspace_message_modal.html' with workspace=workspace %}  
                             {% include 'components/modals/workspaces/create_workspace_message_modal.html' with workspace=workspace %}
                             {% include 'components/modals/workspaces/edit_workspace_message_modal.html' with workspace=workspace %}

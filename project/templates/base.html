@@ -49,6 +49,7 @@
     <script src="https://www.pixelwibes.com/template/my-task/html/js/page/hr.js"></script>
     <script>
         const requestUserSlug = "{{request.user.slug}}"
+        const requestUser = "{{request.user}}"
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
         var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
             return new bootstrap.Tooltip(tooltipTriggerEl)

@@ -16,20 +16,20 @@ def make_ban(self, request, queryset):
 class CustomUserAdmin(BaseUserAdmin):
     model = CustomUser
     ordering = ('email', 'created')
-    list_display = ('email', 'first_name', 'last_name', 'is_staff', 'is_active', 'is_banned')
-    list_filter = ('is_staff', 'is_active')
-    readonly_fields = ('slug',)
+    list_display = ('email', 'first_name', 'last_name', 'is_staff', 'is_active', 'is_banned', 'is_verified')
+    list_filter = ('is_staff', 'is_active', 'is_verified')
+    readonly_fields = ('slug', 'otp')
     actions = (make_ban,)
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        ('Personal info', {'fields': ('first_name', 'last_name', 'slug')}),
-        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'is_banned', 'user_permissions', 'groups')}),
+        ('Personal info', {'fields': ('first_name', 'last_name', 'slug', 'otp')}),
+        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'is_banned', 'is_verified', 'user_permissions', 'groups')}),
         ('Important dates', {'fields': ('last_login', 'date_joined')}),
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2', 'first_name', 'last_name', 'is_active', 'is_staff', 'is_superuser'),
+            'fields': ('email', 'password1', 'password2', 'first_name', 'last_name', 'is_verified', 'is_active', 'is_staff', 'is_superuser'),
         }),
     )
     search_fields = ('email',)

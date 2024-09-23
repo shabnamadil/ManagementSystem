@@ -13,11 +13,15 @@ from .models import (
     ProjectMemberInvitation,
     Task,
     Subtask,
-    TaskAssignedMember
+    TaskAssignedMember,
+    SubtaskStatus,
+    TaskSentTo
 )
 
 admin.site.register(Subtask)
 admin.site.register(TaskAssignedMember)
+admin.site.register(SubtaskStatus)
+admin.site.register(TaskSentTo)
 
 @admin.action(description="Make banned selected workspaces")
 def make_ban(self, request, queryset):

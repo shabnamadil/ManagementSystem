@@ -26,7 +26,9 @@ from apps.workspace.models import (
     Task,
     TaskAssignedMember,
     TaskInvitation,
-    Subtask
+    Subtask,
+    SubtaskStatus,
+    TaskSentTo
 )
 from apps.user.api.serializers import UserListSerializer
 
@@ -487,7 +489,8 @@ class TaskListSerializer(serializers.ModelSerializer):
             'started',
             'deadline',
             'created_date',
-            'sharing_date'
+            'sharing_date',
+            'client_accepted'
         )
 
     def get_task_creator(self, obj):
@@ -532,19 +535,32 @@ class TaskPostSerializer(TaskListSerializer):
     priority = serializers.ChoiceField(choices=PRIORITY_CHOICES)
     started = serializers.DateTimeField()
     deadline = serializers.DateTimeField()
-    sharing_date = serializers.DateTimeField(required=False)
+    sharing_date = serializers.DateTimeField(required=False, allow_null=True)
 
     def validate(self, attrs):
         request = self.context['request']
         if not self.instance:
             attrs['task_creator'] = request.user
-        if attrs['started'] and attrs['deadline']:
-            if attrs['deadline'] <= attrs['started']:
-                raise ValidationError('Deadline must be in the future')
-        if attrs['started']:
-            if attrs['started'] < timezone.now():
-                raise ValidationError('Started date cannot be in the past')
-        return super().validate(attrs)
+        started = attrs.get('started', None)
+        deadline = attrs.get('deadline', None)
+
+        if self.instance:
+            # If instance exists, use the original dates if not updated
+            if started is None:
+                started = self.instance.started
+            if deadline is None:
+                deadline = self.instance.deadline
+
+        # Validate deadline is after start date
+        if started and deadline and deadline <= started:
+            raise ValidationError('Deadline must be in the future')
+
+        # Validate that the start date is not in the past, but only if it's being changed
+        if self.instance is None or (started and started != self.instance.started):
+            if started < timezone.now():
+                raise ValidationError('Start date cannot be in the past')
+
+        return attrs
     
     def create(self, validated_data):
         task_creator = validated_data.pop('task_creator')
@@ -639,7 +655,7 @@ class TaskCompletedSerializer(TaskListSerializer):
             else:
                 validated_data['completed'] = True
         else:
-            if instance.completed_percent == 100:
+            if all(subtask.completed for subtask in instance.subtasks.all()):
                 validated_data['completed'] = True
             else:
                 validated_data['completed'] = False
@@ -679,14 +695,129 @@ class TaskAddMemberSerializer(serializers.ModelSerializer):
             raise ValidationError('This user is already member of this task')
         
         return super().validate(attrs)
+    
 
+class TaskSendToSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(write_only=True)
+
+    class Meta:
+        model = TaskSentTo
+        fields = (
+            'id',
+            'email',
+            'task'
+        )
+
+    def validate(self, attrs):
+        request = self.context['request']
+        email = attrs.get('email')
+        task = attrs.get('task')
+        inviter = request.user
+
+        if not email:
+            raise serializers.ValidationError("Email is required.")
+        if not task.completed:
+            raise serializers.ValidationError('Task must be completed before sharing.')
+        
+
+        try:
+            user = User.objects.get(email=email)
+            try:
+                sended_to = TaskSentTo.objects.get(task=task, user=user)
+                if sended_to:
+                    raise serializers.ValidationError('Task is already sent to this email')
+            except TaskSentTo.DoesNotExist:
+                sended_to = None
+        except User.DoesNotExist:
+            user = None
+
+        # Prepare the email content
+        current_site = Site.objects.get_current()
+        send_url = f"http://{current_site.domain}/{task.get_absolute_url()}"
+        login_url = f"http://{current_site.domain}{reverse_lazy('login')}"
+
+        context = {
+            'task': task,
+            'inviter': inviter,
+            'send_url': send_url,
+            'is_login': user is not None,
+            'login_url': login_url
+        }
+        subject = "Taska nəzər"
+        message = render_to_string('components/mail/task_send_to.html', context)
+
+        # Send the email
+        send_mail(
+            subject,
+            message,
+            settings.DEFAULT_FROM_EMAIL,
+            [email],
+            fail_silently=False,
+            html_message=message,
+        )
+
+        self.context['user'] = user
+
+        return attrs
+
+    def create(self, validated_data):
+        validated_data.pop('email', None)
+        user = self.context.get('user')
+
+        if user:
+            validated_data['user'] = user
+
+        return TaskSentTo.objects.create(**validated_data)
+    
+
+class TaskClientEditSerializer(serializers.ModelSerializer):
+    file = serializers.FileField(read_only=True)
+    title = serializers.CharField(read_only=True)
+
+    class Meta:
+        model = Task
+        fields = (
+            'id',
+            'ready_content',
+            'task_sent_to',
+            'file',
+            'title'
+        )
+
+    def validate(self, attrs):
+        if not attrs.get('task_sent_to'):
+            raise serializers.ValidationError('This task has to be sent to someone before this action.')
+        return super().validate(attrs)
+    
+
+class TaskClientAcceptSerializer(serializers.ModelSerializer):
+    title = serializers.CharField(read_only=True)
+    completed_percent = serializers.IntegerField(read_only=True)
+
+    class Meta:
+        model = Task
+        fields = (
+            'id',
+            'client_accepted',
+            'title',
+            'completed_percent'
+        )
+
+    def update(self, instance, validated_data):
+        validated_data['client_accepted'] = not instance.client_accepted
+        instance = super().update(instance, validated_data)
+        instance.save()
+        return instance
+    
 
 class SubtaskListSerializer(serializers.ModelSerializer):
     subtask_creator = serializers.SerializerMethodField()
     started_date = serializers.SerializerMethodField()
     deadline = serializers.SerializerMethodField()
-    assigned_to = TaskAssignedMemberListSerializer()
     assigned_user = serializers.SerializerMethodField()
+    subtask_task_admin = serializers.SerializerMethodField()
+    status = serializers.SerializerMethodField()
+
     class Meta:
         model = Subtask
         fields = (
@@ -700,7 +831,9 @@ class SubtaskListSerializer(serializers.ModelSerializer):
             'file',
             'completed',
             'assigned_to',
-            'assigned_user'
+            'assigned_user',
+            'subtask_task_admin',
+            'status'
         )
 
     def get_subtask_creator(self, obj):
@@ -719,6 +852,17 @@ class SubtaskListSerializer(serializers.ModelSerializer):
     def get_assigned_user(self, obj):
         if obj.assigned_to:
             return TaskAssignedMemberListSerializer(obj.assigned_to).data
+        
+    def get_subtask_task_admin(self, obj):
+        admins = obj.task.assigned_members.filter(role='Admin')
+        return TaskAssignedMemberListSerializer(admins, many=True).data
+    
+    def get_status(self, obj):
+        data = {
+            'status_name' : obj.status.status_name,
+            'status_id' : obj.status.id
+        }
+        return data
 
 
 class SubtaskPostSerializer(SubtaskListSerializer):
@@ -752,12 +896,15 @@ class SubtaskPostSerializer(SubtaskListSerializer):
 class SubtaskCompletedSerializer(SubtaskListSerializer):
 
     def update(self, instance, validated_data):
-        if instance.completed:
-            validated_data['completed'] = False
+        validated_data['completed'] = not instance.completed
+        instance = super().update(instance, validated_data)
+        task = instance.task
+        if all(subtask.completed for subtask in task.subtasks.all()):
+            task.completed = True
         else:
-            validated_data['completed'] = True
-
-        return super().update(instance, validated_data)
+            task.completed = False
+        task.save()
+        return instance
     
 
 class SubtaskAddMemberSerializer(serializers.ModelSerializer):
@@ -792,4 +939,32 @@ class SubtaskAddMemberSerializer(serializers.ModelSerializer):
             raise ValidationError('This user is already member of this task')
         
         return super().validate(attrs)
+    
+
+class SubtaskAcceptedSerializer(SubtaskListSerializer):
+
+    def update(self, instance, validated_data):
+        if instance.status.status_name == 'In progress':
+            instance.status.status_name = 'Accepted'
+            instance.status.save()
+        return super().update(instance, validated_data)
+    
+
+class SubtaskAddNoteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SubtaskStatus
+        fields = (
+            'id',
+            'note'
+        )
+
+    def update(self, instance, validated_data):
+        if instance.status_name == 'Accepted':
+            instance.status_name = 'In progress'
+            instance.save()
+        if instance.subtask.completed == True:
+            instance.subtask.completed = False
+            instance.subtask.save()
+        return super().update(instance, validated_data)
+
 

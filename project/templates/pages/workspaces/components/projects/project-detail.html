@@ -20,13 +20,18 @@
                             {% include 'components/modals/tasks/task_member_invitation_modal.html' with task=task %}     
                             {% include 'components/modals/tasks/delete_task_modal.html' with task=task %} 
                             {% include 'components/modals/tasks/edit_task_modal.html' with task=task %}
+                            {% include 'components/modals/tasks/edit_task_modal.html' with task=task %}
+                            {% include 'components/modals/tasks/send_task_modal.html' with task=task %}
                             <!-- {% include 'components/modals/workspaces/delete_workspace_message_modal.html' with workspace=workspace %}  
                             {% include 'components/modals/workspaces/create_workspace_message_modal.html' with workspace=workspace %}
                             {% include 'components/modals/workspaces/edit_workspace_message_modal.html' with workspace=workspace %}
                             {% for member in workspace.workspace_members.all %}
                             {% include 'components/modals/workspaces/member_role_change_modal.html' with member=member %} -->
                             <!-- {% endfor %} -->
-                            {% endfor %}                   
+                            {% endfor %}          
+                            {% for task in sent_tasks %}    
+                            {% include 'components/modals/tasks/edit_sent_task_modal.html' with task=task %}
+                            {% endfor %}     
                         </div>
                     </div>
                 </div> <!-- Row end  -->
@@ -44,12 +49,25 @@
                         </div>
                     </div>
                 </div>
+                <div class="row align-items-center">
+                    <div class="col-lg-12 col-md-12 flex-column">
+                        <div class="tab-content mt-4">
+                            <div class="tab-pane fade show active" id="All-list">
+                                <h4 class="fw-bold">Nəzər salmalı olduğun tasklar</h4>
+                                <div class="row g-3 gy-5 py-3 row-deck mt-3" id="sent_tasks">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 {% endblock body %}
 
 {% block script %}
 <script src="{% static 'assets/js/api/tasks.js' %}"></script>
+<script src="{% static 'assets/js/api/sent_task.js' %}"></script>
 <script>
     const project = "{{project.slug}}"
 </script>

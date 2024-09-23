@@ -1,0 +1,26 @@
+<div class="modal fade" id="addNote-{{subtask.status.id}}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title  fw-bold" id="editprojectLabel"> Qeyd yazın </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" id="addNoteForm-{{subtask.status.id}}">
+                {% csrf_token %}
+                <input type="hidden" name="_method" value="PUT">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="exampleFormControlTextarea786" class="form-label">Qeyd</label>
+                        <textarea class="form-control" name="note" id="noteTextarea-{{subtask.status.id}}" rows="3"
+                            placeholder="Add any extra details about the request">{{subtask.status.note}}</textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                        id="cancel-add-note-{{subtask.status.id}}">Ləğv et</button>
+                    <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Təsdiq</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

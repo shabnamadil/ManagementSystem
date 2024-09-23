@@ -32,6 +32,7 @@ function displayTasks(tasks) {
       setDeleteTaskBtn(task);
       setTaskEditForm(task)
       setTaskCompletedBtn(task)
+      setSendTaskForm(task);
     //   if (workspace.workspace_members.length > 0) {
     //     workspace.workspace_members.forEach(member => {
     //       setRemoveWorkspaceMemberBtn(workspace, member)
@@ -129,7 +130,17 @@ function createTaskCard(task) {
                   <span class="ms-2">${task.completed_percent} %</span>
                 </div>
               </div>
+              <div class="col-6">
+                <div class="d-flex align-items-center">
+                  <span class="ms-2">Client accepted:${task.client_accepted}</span>
+                </div>
+              </div>
             </div> 
+            ${ task.completed_percent == 100 ?
+              ` <div class="card-footer">
+                  <button data-bs-toggle="modal" data-bs-target="#sendtask-${task.id}">send</button>
+                </div>` : ''
+            }
           </div>
         </div>
       </div>
@@ -190,7 +201,7 @@ async function editTask(formData, task) {
   
     try {
       const response = await fetch(url, {
-        method: 'PATCH',
+        method: 'PUT',
         headers: {
           'X-CSRFToken': csrfToken
         },
@@ -252,8 +263,6 @@ async function taskMemberInvite(formData, task) {
     console.log(error);
 
   }
-
-
 }
 
 createTaskForm.addEventListener('submit', function (e) {
@@ -284,6 +293,15 @@ function setTaskInviteForm(task) {
     e.preventDefault()
     taskMemberInvite((new FormData(taskMemberInviteForm)), task)
     taskMemberInviteForm.reset()
+  })
+}
+
+function setSendTaskForm(task) {
+  const sendTaskForm = document.getElementById(`taskSendForm-${task.id}`)
+  sendTaskForm.addEventListener('submit', function (e) {
+    e.preventDefault()
+    sendTask((new FormData(sendTaskForm)))
+    sendTaskForm.reset()
   })
 }
 

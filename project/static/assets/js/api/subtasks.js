@@ -29,6 +29,8 @@ function displaySubtasks(subtasks) {
       setDeleteSubtaskBtn(subtask);
       setSubtaskEditForm(subtask)
       setSubtaskCompletedBtn(subtask)
+      setSubtaskAcceptedBtn(subtask)
+      setSubtaskAddNoteForm(subtask)
     //   if (workspace.workspace_members.length > 0) {
     //     workspace.workspace_members.forEach(member => {
     //       setRemoveWorkspaceMemberBtn(workspace, member)
@@ -40,7 +42,7 @@ function displaySubtasks(subtasks) {
 }
   
 function createSubtaskCard(subtask) {
-  
+
     return `
       <div class="col-xxl-4 col-xl-4 col-lg-4 col-md-6 col-sm-6"  id="subtask-item-${subtask.id}">
         <div class="card task-item">
@@ -48,7 +50,11 @@ function createSubtaskCard(subtask) {
             <div class="d-flex align-items-center justify-content-between mt-5">
               <div class="lesson_name">
                 <div class="d-flex align-items-center justify-content-center"> 
+                  <div>
                     <h6 class="mb-0 fw-bold fs-6">${subtask.job}</h6>
+                    <span id="subtask-status-${subtask.id}">Status: ${subtask.status.status_name}</span>
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#note-subtask-${subtask.id}">Notes</button>
+                  </div>
                 </div>
               </div>
               <div class="btn-group ms-2" role="group" aria-label="Basic outlined example">
@@ -93,6 +99,18 @@ function createSubtaskCard(subtask) {
                     </div>
               </div>
             </div> 
+            <div class="card-footer">
+              ${subtask.subtask_task_admin
+                .map(admin => 
+                  admin.user.email === requestUser && subtask.completed 
+                    ? `
+                    <button ${subtask.status.status_name === 'Accepted' ? 'disabled' : ''} id="accept-subtask-${subtask.id}">Yes</button>
+                    <button data-bs-toggle="modal" data-bs-target="#addNote-${subtask.status.status_id}">Edit</button>
+                    ` 
+                    : ''
+                )
+                .join('')}
+            </div>
           </div>
         </div>
       </div>
@@ -101,7 +119,6 @@ function createSubtaskCard(subtask) {
 
 async function createSubtask(formData) {
     const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
-    console.log(formData);
     
     try {
       const response = await fetch(BASE_URL, {
@@ -155,10 +172,7 @@ async function editSubtask(formData, subtask) {
         },
         body: formData
       });
-
-      console.log(response.text);
       
-  
       if (response.ok) {
         const data = await response.json();
         const subtaskCard = document.getElementById(`subtask-item-${subtask.id}`);
@@ -168,6 +182,31 @@ async function editSubtask(formData, subtask) {
     } catch (error) {
         console.log(error);
     }
+}
+
+async function addNote(formData, subtask) {
+  const url = `${BASE_URL}note/${subtask.status.status_id}/`
+  const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+  
+  try {
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'X-CSRFToken': csrfToken
+      },
+      body: formData
+    });
+    console.log(response);
+    
+    if (response.ok) {
+      const data = await response.json();
+      const subtaskCard = document.getElementById(`subtask-item-${subtask.id}`);
+      subtaskCard.outerHTML = createSubtaskCard(data);
+    }
+
+  } catch (error) {
+      console.log(error);
+  }
 }
 
 async function completeSubtask(subtask) {
@@ -189,6 +228,30 @@ async function completeSubtask(subtask) {
       subtaskCard.outerHTML = createSubtaskCard(data);
     }
     fetchSubtasks()
+  } catch (error) {
+      console.log(error);
+  }
+}
+
+async function acceptSubtask(subtask) {
+  const url = `${BASE_URL}accepted/${subtask.id}/`
+  const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+
+  try {
+    const response = await fetch(url, {
+      method: 'PATCH',
+      headers: {
+        'X-CSRFToken': csrfToken,
+        'Content-Type': 'application/json'
+      },
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      const subtaskStatusArea = document.getElementById(`subtask-status-${subtask.id}`)
+      subtaskStatusArea.innerHTML = data.status.status_name
+    }
+    
   } catch (error) {
       console.log(error);
   }
@@ -217,6 +280,23 @@ function setSubtaskEditForm(subtask) {
     }
 }
 
+function setSubtaskAddNoteForm(subtask) {
+    
+  const addSubtaskNoteForm = document.getElementById(`addNoteForm-${subtask.status.status_id}`)
+  
+  addSubtaskNoteForm.addEventListener('submit', function (e) {
+    console.log(e);
+    
+    e.preventDefault()
+    
+    addNote((new FormData(addSubtaskNoteForm)), subtask)
+  })
+  if (addSubtaskNoteForm) {
+    setCancelAddNoteBtn(subtask, addSubtaskNoteForm)
+    addSubtaskNoteForm.reset
+  }
+}
+
 function setDeleteSubtaskBtn(subtask) {
     const deleteSubtaskBtn = document.getElementById(`deletesubtask-${subtask.id}`)
     deleteSubtaskBtn.addEventListener('submit', function (e) {
@@ -233,10 +313,29 @@ function setCancelSubtaskEditBtn(subtask, ediSubtaskForm) {
     })
 }
 
+function setCancelAddNoteBtn(subtask, addSubtaskNoteForm) {
+  const cancelAddNoteBtn = document.getElementById(`cancel-add-note-${subtask.status.status_id}`)
+  cancelAddNoteBtn.addEventListener('click', function (e) {
+    e.preventDefault()
+    addSubtaskNoteForm.reset()
+  })
+}
+
 function setSubtaskCompletedBtn(subtask) {
   const completedSubtaskBtn = document.getElementById(`completesubtask-${subtask.id}`)
   completedSubtaskBtn.addEventListener('click', function (e) {
     e.preventDefault()
     completeSubtask(subtask)
   })
+}
+
+function setSubtaskAcceptedBtn(subtask) {
+  if (subtask.completed) {
+      const acceptedSubtaskBtn = document.getElementById(`accept-subtask-${subtask.id}`)
+      acceptedSubtaskBtn.addEventListener('click', function (e) {
+        e.preventDefault()
+        acceptSubtask(subtask)
+      })
+  }
+
 }
