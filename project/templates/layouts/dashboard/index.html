@@ -25,15 +25,24 @@
 
 </head>
 
-<body>
-    {% include "components/layout/header/Header.html" %}
-    {% include "components/layout/header/MobileHeader.html" %}
+<body class="bg-[#FAFCFE]">
 
-    {% block main %}
+    <div class="custom-container flex">
+        <!-- Sidebar -->
+        {% include "layouts/dashboard/components/sidebar/Sidebar.html" %}
+      
+        <!-- Main Content -->
+        <div class="ml-[380px] flex-1 flex flex-col pt-[41px] p-[27px]">
+          <!-- Top Header -->
+        {% include "layouts/dashboard/components/header/Header.html" %}
 
-    {% endblock main %}
+        {% block main %}
+        {% endblock main %}
 
-    {% include "components/layout/footer/Footer.html" %}
+        </div> 
+      </div>
+      
+    {% include "layouts/dashboard/components/footer/Footer.html" %}
 
 </body>
 
