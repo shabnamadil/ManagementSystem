@@ -87,7 +87,7 @@ __pycache__/
 env/
 build/
 develop-eggs/
-dist/
+# dist/
 downloads/
 eggs/
 lib/
@@ -133,6 +133,7 @@ __pycache__/
 migrations/
 local_settings.py
 db.sqlite3
+.env
 
 .venv
 venv
