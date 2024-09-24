@@ -2,8 +2,8 @@
 <section class="max-w-custom mx-auto px-[20px] 2xl:px-0">
     <div class="flex mt-[139px] gap-[122px]">
         <div class="">
-            <h2 class="text-[46px] w-[586px] font-semibold">Yaradıcılığınızı sərbəst şəkildə sərgiləyin</h2>
-            <p class="text-[22px] w-[459px] font-light mt-[16px] leading-[36px]">Dizayn yaratmaq indi daha asandır. Alətlərimiz və şablonlarımızla istədiyiniz layihələri həyata keçirin.</p>
+            <h2 class="text-[46px] w-[586px] font-semibold">{{hero_section.title}}</h2>
+            <p class="text-[22px] w-[459px] font-light mt-[16px] leading-[36px]">{{hero_section.description}}</p>
             <div class="mt-[47px]">
                 <div class="relative">
                     <button class="bg-primary w-[179px] h-[52px] rounded-[44px]">Frilanser ol</button>
@@ -28,7 +28,7 @@
                 <div class="bg-primary rounded-bl-[92px] rounded-tr-[92px]"></div>
             </div>
             <div class="absolute top-0 h-full w-full flex justify-end">
-                <img class="h-full" src="{% static "images/hero.png" %}" alt="Hero">
+                <img class="h-full" src="{{hero_section.image.url}}" alt="Hero">
             </div>
         </div>
     </div>
