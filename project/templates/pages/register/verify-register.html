@@ -2,7 +2,7 @@
 
 {% block main %}
 {% load static %}
-<div class="bg-white rounded-lg sm:mt-[100px] mt-4 items-start max-w-custom m-auto md:flex-nowrap relative">
+<div class="bg-white rounded-lg mt-[139px] items-start max-w-custom m-auto md:flex-nowrap relative">
     <!-- Left images -->
     <img src="{% static 'assets/images/vector-yellow.png' %}" alt="" class="hidden sm:hidden md:block h-auto md:ml-[0px] absolute top-0 left-[65px]">
 
@@ -13,15 +13,18 @@
             {% csrf_token %}
             <div class="flex justify-center">
                 <input type="text" id="otp" name="otp" required placeholder="6 rəqəmli kod" maxlength="6"
-                    class="mt-2 w-[50%] text-center text-gray-500 text-[14px] sm:text-[16px] py-[10px] sm:py-[12px] md:py-[15px] border border-gray-300 rounded-[8px] focus:border-primary focus:ring-primary">
+                    class="mt-2 w-full text-center text-gray-100 text-[15px] sm:text-[15px] py-[10px] sm:py-[12px] md:py-[15px] border border-gray-300 rounded-[8px] focus:border-primary focus:ring-primary">
             </div>
             <div>
                 <button type="submit"
-                    class="w-full py-[8px] mt-4 bg-primary text-white text-[20px] sm:text-[24px] md:text-[32px] rounded-lg hover:bg-primary-hover hover:border-primary-hover transition-all">
+                    class="w-full py-[8px] mt-1 bg-primary text-white text-[20px] sm:text-[24px] md:text-[32px] rounded-lg hover:bg-primary-hover hover:border-primary-hover transition-all">
                     Təsdiqlə
                 </button>
             </div>
         </form>
+        <a href="#" id="resendVerifyCode" class="text-[24px] font-DMSans text-center mt-4">
+            Yenidən göndər
+        </a>        
     </div>
 
     <!-- Right images -->
@@ -29,5 +32,6 @@
         <img src="{% static 'assets/images/star-gray.png' %}" alt="" class="hidden sm:hidden md:block absolute top-0 right-[140px] w-[100px] h-auto lg:ml-[150px]">
     </div>
 </div>
-<script src="{% static 'assets/js/api/verify-register.js' %}"></script>
+<script src="{% static 'assets/js/api/verify_register.js' %}"></script>
+<script src="{% static 'assets/js/api/resend_code.js' %}"></script>
 {% endblock main %}

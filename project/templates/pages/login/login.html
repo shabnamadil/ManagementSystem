@@ -1,0 +1,84 @@
+{% extends "layouts/default.html" %}
+
+{% block main %}
+{% load static %}
+<div class="bg-white rounded-lg mt-[139px] items-start max-w-custom m-auto md:flex-nowrap relative">
+    <!-- Left images -->
+    <img src="{% static 'assets/images/vector-yellow.png' %}" alt="" class="hidden sm:hidden md:block h-auto md:ml-[0px] absolute top-0 left-[65px]">
+    <img src="{% static 'assets/images/star-green.png' %}" alt="" class="hidden sm:hidden md:block absolute left-[179.19px] bottom-[-68px] w-[80px] h-auto">
+
+    <!-- Form Container -->
+    <div class="flex flex-col w-full lg:w-[80%] max-w-[671px] m-auto px-4">
+        <div class="flex flex-col items-center gap-[16px]">
+            <div class="flex flex-col gap-[16px]">
+                <h2 class="text-[32px] leading-[40px] text-center text-gray-700 font-DMSans sm:text-[36px] md:text-[48px] lg:text-[64px] lg:leading-[40px]">
+                    Daxil olun
+                </h2>
+                <p class="text-[15px] text-center text-gray-600">Ziyarətçinizə möhkəm UX dizaynı ilə hamar onlayn təcrübə bəxş edin</p>
+            </div>
+            <div class="flex flex-col justify-between items-start gap-[7px]">
+                <p class="text-[20px] text-gray-700 font-medium">Sizi yenidən görməyə şadıq!</p>
+                <p class="text-[15px] text-gray-700 font-400">Hesabınız yoxdur? 
+                    <a href="{% url 'register' %}" class="text-primary hover:text-primary-hover transition-all">Qeydiyyatdan</a> keçin!</p>
+            </div>
+        </div>
+        <form method="post" id="loginForm" class="space-y-6 mt-2">
+            {% csrf_token %}
+            {% if form.errors %}
+            <div class="col-12">
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 text-center rounded relative">
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <p class="text-sm">{{ error }}</p>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <p class="text-sm">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            <div>
+                <label for="email" class="block text-[14px] sm:text-[16px] text-black-800 font-medium text-gray-700">E-poçt ünvanı</label>
+                <input type="email" id="email" name="email" required placeholder="example@gmail.com"
+                    class="mt-2 w-full text-gray-500 text-[14px] sm:text-[16px] pl-[15px] sm:pl-[20px] py-[10px] sm:py-[12px] md:py-[15px] border border-gray-300 rounded-[8px] focus:border-primary focus:ring-primary">
+            </div>
+            <div>
+                <label for="password" class="block text-[14px] sm:text-[16px] text-black-800 font-medium text-gray-700">Parol</label>
+                <input type="password" id="password" name="password" required placeholder="********"
+                    class="mt-2 w-full text-gray-500 text-[14px] sm:text-[16px] pl-[15px] sm:pl-[20px] py-[10px] sm:py-[12px] md:py-[15px] border border-gray-300 rounded-[8px] focus:border-primary focus:ring-primary">
+            </div>
+            <div class="flex justify-between items-center text-[14px]">
+                <div class="flex items-center gap-[9px]">
+                    <input type="checkbox" name="remember_me" id="remember_me" class="rounded-[6px] cursor-pointer w-[22px] h-[22px] text-green-500 focus:ring-0 focus:ring-offset-0 checked:bg-green-500">
+                    <label for="remember_me" class="cursor-pointer">Xatırla</label>
+                </div>
+                <span class="cursor-pointer">Şifrəni unutmusan?</span>
+            </div>            
+            <div>
+                <button type="submit"
+                    class="w-full py-[8px] bg-primary text-white text-[20px] sm:text-[24px] md:text-[32px] rounded-lg hover:bg-primary-hover hover:border-primary-hover transition-all">
+                    Qoşul
+                </button>
+            </div>
+        </form>
+        <div class="w-full flex items-center justify-center mt-8">
+            <span class="flex-1 h-[1.95px] bg-gray-300 ml-[20px] md:ml-[41px]"></span>
+            <p class="px-2 md:px-4 text-black text-[14px] sm:text-[16px] md:text-[24px]">Və ya</p>
+            <span class="flex-1 h-[1.95px] bg-gray-300 mr-[20px] md:mr-[41px]"></span>
+        </div>
+        <div class="w-full flex items-center justify-center space-x-6 md:space-x-12 mt-8">
+            <i class="fa-brands fa-facebook text-blue-500 text-[30px] md:text-[40px]"></i>
+            <img src="{% static 'assets/images/google.png' %}" class="w-[30px] md:w-[40px] h-[30px] md:h-[40px]" alt="">
+            <i class="fa-brands fa-apple text-[30px] md:text-[40px]"></i>
+        </div>
+    </div>
+
+    <!-- Right images -->
+    <div class="flex flex-col justify-center gap-2 ml-auto">
+        <img src="{% static 'assets/images/star-gray.png' %}" alt="" class="hidden sm:hidden md:block absolute top-0 right-[140px] w-[100px] h-auto lg:ml-[150px]">
+        <img src="{% static 'assets/images/star-yellow.png' %}" alt="" class="hidden sm:hidden md:block absolute bottom-[-150px] right-[230px] w-[100px] h-auto lg:ml-[150px]">
+    </div>
+</div>
+<script src="{% static 'assets/js/api/login.js' %}"></script>
+{% endblock main %}

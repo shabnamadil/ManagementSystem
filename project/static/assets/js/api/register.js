@@ -18,7 +18,7 @@ async function register() {
         if (response.ok) {
             const data = await response.json();
             // Handle success (e.g., redirect to a success page or show a message)
-            sessionStorage.setItem('email', data.email);
+            localStorage.setItem('email', data.email);
             window.location.href = '/dashboard/verify/';
             console.log('Registration successful:', data);
         } else {

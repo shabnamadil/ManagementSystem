@@ -59,8 +59,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         )
         user.set_password(validated_data['password'])
         user.is_active = False
-        otp = generate_otp()
-        user.otp = otp
         user.save()
+        otp = generate_otp(user)
         send_otp_email(user.email, otp)
         return user
