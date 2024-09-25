@@ -30,6 +30,7 @@ CUSTOM_APPS = [
     'apps.reserve.apps.ReserveConfig',
     'apps.notification.apps.NotificationConfig',
     'apps.bot.apps.BotConfig',
+    'apps.freelancer.apps.FreelancerConfig',
 
     #pages
     'apps.pages.home.apps.HomeConfig',
