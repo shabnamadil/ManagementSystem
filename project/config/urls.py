@@ -9,6 +9,7 @@ urlpatterns = [
     path('dashboard/', include('apps.core.urls')),
     path('api/', include('apps.workspace.api.urls')),
     path('api/', include('apps.user.api.urls')),
+    path('api/', include('apps.pages.contact.api.urls')),
     path("__reload__/", include("django_browser_reload.urls")),
 ]
 

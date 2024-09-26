@@ -35,6 +35,7 @@ CUSTOM_APPS = [
     #pages
     'apps.pages.home.apps.HomeConfig',
     'apps.pages.about.apps.AboutConfig',
+    'apps.pages.contact.apps.ContactConfig',
 
     'theme'
 ]
@@ -72,6 +73,7 @@ FILE_UPLOAD_HANDLERS = [
 ]
 
 MIDDLEWARE = [
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.security.SecurityMiddleware',
     "whitenoise.middleware.WhiteNoiseMiddleware", #new
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -132,7 +134,16 @@ LOGIN_URL = '/login/'
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'az'
+
+LANGUAGES = [
+    ('en', 'English'),
+    ('az', 'Azerbaijani'),
+]
+
+LOCALE_PATHS = [
+    os.path.join(BASE_DIR, 'locale'),
+]
 
 TIME_ZONE = 'Asia/Baku'
 

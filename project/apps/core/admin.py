@@ -1,6 +1,7 @@
 from django.contrib import admin
 
 from .models import SiteSettings
+from .forms import SiteSettingsForm
 
 
 class SingletonModelAdmin(admin.ModelAdmin):
@@ -16,3 +17,4 @@ class SingletonModelAdmin(admin.ModelAdmin):
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(SingletonModelAdmin):
     list_display = ('site_name',)
+    form = SiteSettingsForm

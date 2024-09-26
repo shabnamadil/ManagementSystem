@@ -1,16 +1,11 @@
 from django.contrib.auth import get_user_model 
 from django.contrib.auth.password_validation import validate_password
-from django.utils.encoding import force_bytes
-from django.utils.http import urlsafe_base64_encode
-from django.template.loader import render_to_string
-from django.contrib.sites.models import Site
+from django.utils.translation import gettext as _
 
 from rest_framework import serializers
 
 from utils.serializers.password_field import PasswordField
-from ..tokens import account_activation_token
-from utils.otp.generate_otp import generate_otp
-from utils.otp.send_otp import send_otp_email
+from ..tasks import send_registration_otp
 
 User = get_user_model()
 
@@ -43,11 +38,19 @@ class RegisterSerializer(serializers.ModelSerializer):
         )
 
     def validate(self, attrs):
-        password = attrs['password']
-        if 'password_confirm' in self.initial_data and password != self.initial_data['password_confirm']:
-            raise serializers.ValidationError("Passwords do not match")
-        if 'password_confirm' not in self.initial_data:
-            raise serializers.ValidationError('it is missed password_confirm')
+        password = attrs.get('password', '')
+        password_confirm = self.initial_data.get('password_confirm', '')
+
+        if not password_confirm:
+            raise serializers.ValidationError({
+                'password_confirm': _('This field is required.'),
+            })
+        
+        if password != password_confirm:
+            raise serializers.ValidationError({
+                'password_confirm': _("Passwords do not match."),
+            })
+        
         return attrs
     
     def create(self, validated_data):
@@ -60,6 +63,5 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])
         user.is_active = False
         user.save()
-        otp = generate_otp(user)
-        send_otp_email(user.email, otp)
+        send_registration_otp.delay(user.email)
         return user

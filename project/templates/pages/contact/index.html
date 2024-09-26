@@ -1,22 +1,49 @@
 {% extends "layouts/default.html" %}
-
+{% load static %}
 {% block main %}
     <section class='custom-container grid grid-cols-2 mt-[123px] h-[900px]'>
         <div class="items-center flex">
             <div class="w-[65%]">
                 <h2 class="font-[700] text-[54px]"><span>Bizimlə</span> <span class="text-secondary">Əlaqə</span></h2>
                 <p class="text-[#01133482]/50 mt-[20px] leading-[26px]">Nəsə probleminiz yaranıb? O zaman bizimlə əlaqə saxlayın.</p>
-
-                <form class="mt-[65px] space-y-[20px]" action="">
-                    <div class="grid grid-cols-2 gap-[25px]">
-                        <input class="rounded-[23px]" type="text" placeholder="Ad*">
-                        <input class="rounded-[23px]" type="text" placeholder="Soyad*">
+                <div id="successMessage" class="mt-6 hidden">
+                    <div class="flex items-center justify-between bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg" role="alert">
+                        <p class="text-sm">
+                            Mesajınız göndərildi. Ən qısa zamanda sizinlə əlaqə saxlanılacaq.
+                        </p>
+                        <button onclick="closeSuccessMessage()" class="text-green-700 hover:text-green-800">
+                            <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
                     </div>
-                    <input class="rounded-[23px] w-full" type="email" placeholder="Email*">
-                    <input class="rounded-[23px] w-full" type="number" placeholder="Telefon nömrəsi*">
-                    <textarea rows="4" class="rounded-[23px] w-full" name="" id="" placeholder="Sizin mesajınız"></textarea>
-                    <button class="bg-secondary hover:bg-yellow-400 text-center w-full py-[14.5px] rounded-[23px] text-white">Mesaj göndər</button>
-                </form>
+                </div>
+                <form method="post" id="contactPostForm" class="mt-[65px] space-y-[20px]" action="">
+                    {% csrf_token %}
+                    <div class="grid grid-cols-2 gap-[25px]">
+                        <div class="flex flex-col">
+                            <input class="rounded-[23px]" type="text" name="name" placeholder="Ad*">
+                            <p class="error-message text-red-500 text-sm hidden mt-2 ml-2"></p>
+                        </div>
+                        <div class="flex flex-col">
+                            <input class="rounded-[23px]" type="text" name="surname" placeholder="Soyad*">
+                            <p class="error-message text-red-500 text-sm hidden mt-2 ml-2"></p>
+                        </div>
+                    </div>
+                    <div class="flex flex-col">
+                        <input class="rounded-[23px] w-full" type="email" name="email" id="email" placeholder="Email*">
+                        <p class="error-message text-red-500 text-sm hidden mt-2 ml-2"></p>
+                    </div>
+                    <div class="flex flex-col">
+                        <input class="rounded-[23px] w-full" type="text" name="mobile_number" placeholder="Telefon nömrəsi">
+                        <p class="error-message text-red-500 text-sm hidden mt-2 ml-2"></p>
+                    </div>
+                    <div class="flex flex-col">
+                        <textarea rows="4" class="rounded-[23px] w-full" name="message" placeholder="Sizin mesajınız*"></textarea>
+                        <p class="error-message text-red-500 text-sm hidden mt-2 ml-2"></p>
+                    </div>
+                    <button type="submit" class="bg-secondary hover:bg-yellow-400 text-center w-full py-[14.5px] rounded-[23px] text-white">Mesaj göndər</button>
+                </form>                
             </div>
         </div>
         <div class="relative">
@@ -34,7 +61,7 @@
                             </svg>
                         </div>
                         <p class="text-[14px] font-[500] leading-[26px]">
-                            055 Arthur ave Elk Groot, 67.New Palmas South Carolina.
+                            {{settings.location}}
                         </p>
                     </div>
                     <div class="flex gap-[10px]">
@@ -53,7 +80,7 @@
                             </svg>
                         </div>
                         <p class="text-[14px] font-[500]">
-                            +1 234 678 9108 99
+                            {{settings.number}}
                         </p>
                     </div>
                     <div class="flex gap-[10px]">
@@ -64,11 +91,12 @@
                             </svg>
                         </div>
                         <p class="text-[14px] font-[500]">
-                            Contact@moralizer.com
+                            {{settings.email}}
                         </p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+    <script src="{% static 'assets/js/api/contact.js' %}"></script>
 {% endblock main %}

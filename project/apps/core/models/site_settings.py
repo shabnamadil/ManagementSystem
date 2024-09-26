@@ -6,6 +6,17 @@ class SiteSettings(BaseModel, SingletonModel):
     site_name = models.CharField(max_length=255, verbose_name="Site Name")
     logo = models.ImageField(upload_to='logos/', verbose_name="Site Logo")
     favicon = models.ImageField(upload_to='favicons/', verbose_name="Favicon")
+    location = models.CharField(
+        'Məkan',
+        max_length=200
+    )
+    number = models.CharField(
+        'Əlaqə nömrəsi',
+        max_length=20
+    )
+    email = models.EmailField(
+        'Email ünvanı'
+    )
     facebook = models.URLField(
         'Facebook hesab linki',
         null=True, blank=True
@@ -26,7 +37,10 @@ class SiteSettings(BaseModel, SingletonModel):
         'Tiktok hesab linki',
         null=True, blank=True
     )
-    footer_title = models.CharField("Footer title", max_length=200)
+    footer_title = models.CharField(
+        "Footer title", 
+        max_length=200
+    )
     footer_description = models.TextField(
         'Footer description'
     )

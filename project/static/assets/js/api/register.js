@@ -14,17 +14,20 @@ async function register() {
             },
             body: formData
         });
-
+        
         if (response.ok) {
             const data = await response.json();
-            // Handle success (e.g., redirect to a success page or show a message)
+            registerForm.reset();
             localStorage.setItem('email', data.email);
-            window.location.href = '/dashboard/verify/';
-            console.log('Registration successful:', data);
+            displaySuccessMessage();
+    
+            setTimeout(() => {
+                window.location.href = '/dashboard/verify/';
+            }, 10000);
+
         } else {
             const errorData = await response.json();
-            // Handle error (e.g., display error messages)
-            console.log('Registration failed:', errorData);
+            displayErrors(errorData);
         }
     } catch (error) {
         console.error('An error occurred:', error);
@@ -34,5 +37,4 @@ async function register() {
 registerForm.addEventListener('submit', function(e) {
     e.preventDefault();
     register();
-    registerForm.reset()
 });

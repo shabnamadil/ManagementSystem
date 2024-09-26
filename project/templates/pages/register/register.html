@@ -2,42 +2,70 @@
 
 {% block main %}
 {% load static %}
+
 <div class="bg-white rounded-lg mt-[139px] items-start max-w-custom m-auto md:flex-nowrap relative">
     <!-- Left images -->
-    <img src="{% static 'assets/images/vector-yellow.png' %}" alt="" class="hidden sm:hidden md:block h-auto md:ml-[0px] absolute top-0 left-[65px]">
-    <img src="{% static 'assets/images/star-green.png' %}" alt="" class="hidden sm:hidden md:block absolute left-[220px] bottom-[200px] w-[80px] h-auto">
+    <img src="{% static 'assets/images/vector-yellow.png' %}" alt=""
+        class="hidden sm:hidden md:block h-auto md:ml-[0px] absolute top-0 left-[65px]">
+    <img src="{% static 'assets/images/star-green.png' %}" alt=""
+        class="hidden sm:hidden md:block absolute left-[220px] bottom-[200px] w-[80px] h-auto">
 
     <!-- Form Container -->
     <div class="flex flex-col w-full lg:w-[80%] max-w-[671px] m-auto px-4">
-        <h2 class="text-[32px] leading-[40px] text-center text-gray-700 font-DMSans sm:text-[36px] md:text-[48px] lg:text-[64px] lg:leading-[40px]">
+        <h2
+            class="text-[32px] leading-[40px] text-center text-gray-700 font-DMSans sm:text-[36px] md:text-[48px] lg:text-[64px] lg:leading-[40px]">
             Qeydiyyat
         </h2>
+        <div id="successMessage" class="mt-6 hidden">
+            <div class="flex items-center justify-between mt-[20px] bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg" role="alert">
+                <p class="text-sm">
+                    Qeydiyyatı tamamlamaq üçün elektron poçt qutunuzu yoxlayın.
+                </p>
+                <button onclick="closeSuccessMessage()" class="text-green-700 hover:text-green-800">
+                    <svg class="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        </div>
         <form method="POST" id="registerForm" class="space-y-6 mt-2">
             {% csrf_token %}
             <div>
-                <label for="first_name" class="block text-[14px] sm:text-[16px] text-black-800 font-medium text-gray-700">Ad</label>
-                <input type="text" id="first_name" name="first_name" required placeholder="Ad"
-                    class="mt-2 w-full text-gray-500 text-[14px] sm:text-[16px] pl-[15px] sm:pl-[20px] py-[10px] sm:py-[12px] md:py-[15px] border border-gray-300 rounded-[8px] focus:border-primary focus:ring-primary">
+                <label for="first_name"
+                    class="block text-[14px] sm:text-[16px] text-black-800 font-medium text-gray-700">Ad</label>
+                <input type="text" id="first_name" name="first_name" placeholder="Ad"
+                    class="mt-2 w-full text-gray-500 text-[14px] 
+                    sm:text-[16px] pl-[15px] sm:pl-[20px] py-[10px] sm:py-[12px] md:py-[15px] border border-gray-300 rounded-[8px] focus:border-primary focus:ring-primary">
+                <p class="error-message text-red-500 text-sm hidden mt-2 ml-2"></p>
             </div>
             <div>
-                <label for="last_name" class="block text-[14px] sm:text-[16px] text-black-800 font-medium text-gray-700">Soyad</label>
-                <input type="text" id="last_name" name="last_name" required placeholder="Soyad"
+                <label for="last_name"
+                    class="block text-[14px] sm:text-[16px] text-black-800 font-medium text-gray-700">Soyad</label>
+                <input type="text" id="last_name" name="last_name" placeholder="Soyad"
                     class="mt-2 w-full text-gray-500 text-[14px] sm:text-[16px] pl-[15px] sm:pl-[20px] py-[10px] sm:py-[12px] md:py-[15px] border border-gray-300 rounded-[8px] focus:border-primary focus:ring-primary">
+                <p class="error-message text-red-500 text-sm hidden mt-2 ml-2"></p>
             </div>
             <div>
-                <label for="email" class="block text-[14px] sm:text-[16px] text-black-800 font-medium text-gray-700">Email</label>
-                <input type="email" id="email" name="email" required placeholder="example@gmail.com"
+                <label for="email"
+                    class="block text-[14px] sm:text-[16px] text-black-800 font-medium text-gray-700">Email</label>
+                <input type="email" id="email" name="email" placeholder="example@gmail.com"
                     class="mt-2 w-full text-gray-500 text-[14px] sm:text-[16px] pl-[15px] sm:pl-[20px] py-[10px] sm:py-[12px] md:py-[15px] border border-gray-300 rounded-[8px] focus:border-primary focus:ring-primary">
+                <p class="error-message text-red-500 text-sm hidden mt-2 ml-2"></p>
             </div>
             <div>
-                <label for="password" class="block text-[14px] sm:text-[16px] text-black-800 font-medium text-gray-700">Parol</label>
-                <input type="password" id="password" name="password" required placeholder="********"
+                <label for="password"
+                    class="block text-[14px] sm:text-[16px] text-black-800 font-medium text-gray-700">Parol</label>
+                <input type="password" id="password" name="password" placeholder="********"
                     class="mt-2 w-full text-gray-500 text-[14px] sm:text-[16px] pl-[15px] sm:pl-[20px] py-[10px] sm:py-[12px] md:py-[15px] border border-gray-300 rounded-[8px] focus:border-primary focus:ring-primary">
+                <p class="error-message text-red-500 text-sm hidden mt-2 ml-2"></p>
             </div>
             <div>
-                <label for="password_confirm" class="block text-[14px] sm:text-[16px] text-black-800 font-medium text-gray-700">Təkrar Parol</label>
-                <input type="password" id="password_confirm" name="password_confirm" required placeholder="********"
+                <label for="password_confirm"
+                    class="block text-[14px] sm:text-[16px] text-black-800 font-medium text-gray-700">Təkrar
+                    Parol</label>
+                <input type="password" id="password_confirm" name="password_confirm" placeholder="********"
                     class="mt-2 w-full text-gray-500 text-[14px] sm:text-[16px] pl-[15px] sm:pl-[20px] py-[10px] sm:py-[12px] md:py-[15px] border border-gray-300 rounded-[8px] focus:border-primary focus:ring-primary">
+                <p class="error-message text-red-500 text-sm hidden mt-2 ml-2"></p>
             </div>
             <div>
                 <button type="submit"
@@ -64,9 +92,12 @@
 
     <!-- Right images -->
     <div class="flex flex-col justify-center gap-2 ml-auto">
-        <img src="{% static 'assets/images/star-gray.png' %}" alt="" class="hidden sm:hidden md:block absolute top-0 right-[140px] w-[100px] h-auto lg:ml-[150px]">
-        <img src="{% static 'assets/images/star-yellow.png' %}" alt="" class="hidden sm:hidden md:block absolute bottom-[130px] right-[230px] w-[100px] h-auto lg:ml-[150px]">
+        <img src="{% static 'assets/images/star-gray.png' %}" alt=""
+            class="hidden sm:hidden md:block absolute top-0 right-[140px] w-[100px] h-auto lg:ml-[150px]">
+        <img src="{% static 'assets/images/star-yellow.png' %}" alt=""
+            class="hidden sm:hidden md:block absolute bottom-[130px] right-[230px] w-[100px] h-auto lg:ml-[150px]">
     </div>
 </div>
 <script src="{% static 'assets/js/api/register.js' %}"></script>
+
 {% endblock main %}
