@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import SiteSettings
+from .models import SiteSettings, Newsletter
 from .forms import SiteSettingsForm
 
 
@@ -18,3 +18,9 @@ class SingletonModelAdmin(admin.ModelAdmin):
 class SiteSettingsAdmin(SingletonModelAdmin):
     list_display = ('site_name',)
     form = SiteSettingsForm
+
+
+@admin.register(Newsletter)
+class NewsletterAdmin(admin.ModelAdmin):
+    list_display = ('email', )
+    list_filter = ('created', )

@@ -19,6 +19,7 @@ async function register() {
             const data = await response.json();
             registerForm.reset();
             localStorage.setItem('email', data.email);
+            localStorage.setItem('registrationSuccess', 'true');
             displaySuccessMessage();
     
             setTimeout(() => {

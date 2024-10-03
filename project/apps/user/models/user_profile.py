@@ -13,7 +13,7 @@ class Profile(BaseModel):
     image = models.ImageField(
         'Foto',
         null=True, blank=True,
-        upload_to=upload_to
+        upload_to='users/'
     )
     profession = models.CharField(
         max_length=255, 

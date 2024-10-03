@@ -8,8 +8,6 @@ from .models.custom_user import CustomUser
 from .models.user_profile import Profile
 from .models.otp import OTP
 
-admin.site.register(OTP)
-
 
 @admin.action(description="Ban selected users")
 def make_ban(self, request, queryset):
@@ -18,8 +16,8 @@ def make_ban(self, request, queryset):
 
 class CustomUserAdmin(BaseUserAdmin):
     model = CustomUser
-    ordering = ('email', 'created')
-    list_display = ('email', 'first_name', 'last_name', 'is_staff', 'is_active', 'is_banned', 'is_verified')
+    ordering = ('email', '-created')
+    list_display = ('id', 'email', 'first_name', 'last_name', 'is_staff', 'is_active', 'is_banned', 'is_verified')
     list_filter = ('is_staff', 'is_active', 'is_verified')
     readonly_fields = ('slug', )
     actions = (make_ban,)
@@ -37,6 +35,7 @@ class CustomUserAdmin(BaseUserAdmin):
     )
     search_fields = ('email',)
     filter_horizontal = ('user_permissions', 'groups')
+    list_per_page = 20
 
 admin.site.register(CustomUser, CustomUserAdmin)
 
@@ -78,3 +77,10 @@ class UserProfileAdmin(admin.ModelAdmin):
 
     # def has_change_permission(self, request, obj=None):
     #     return False
+
+
+@admin.register(OTP)
+class OTPAdmin(admin.ModelAdmin):
+    list_display = ('otp', 'is_used')
+    list_filter = ('is_used', )
+    readonly_fields = ('otp', 'is_used', 'user', 'expires_at')

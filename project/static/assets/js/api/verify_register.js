@@ -18,13 +18,17 @@ async function verify() {
         
         if (response.ok) {
             const data = await response.json();
-            // Handle success (e.g., redirect to a success page or show a message)
             console.log('Verified successfully:', data);
             localStorage.removeItem('email')
+            displaySuccessMessage();
+
+            setTimeout(() => {
+                window.location.href = '/dashboard/login/';
+            }, 1000);
         } else {
             const errorData = await response.json();
-            // Handle error (e.g., display error messages)
-            console.log('Verification failed:', errorData);
+            console.log(errorData);
+            displayErrors(errorData);
         }
     } catch (error) {
         console.error('An error occurred:', error);

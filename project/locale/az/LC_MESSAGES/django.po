@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-26 00:13+0400\n"
+"POT-Creation-Date: 2024-09-26 16:34+0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,16 +18,53 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: apps/user/api/serializers.py:48
+#: apps/user/api/serializers.py:46
 #: env/lib/python3.12/site-packages/crispy_forms/tests/test_form_helper.py:130
 #: env/lib/python3.12/site-packages/crispy_forms/tests/test_form_helper.py:140
 #: env/lib/python3.12/site-packages/django/forms/fields.py:91
 msgid "This field is required."
 msgstr "Bu sahə tələb edilir."
 
-#: apps/user/api/serializers.py:53
+#: apps/user/api/serializers.py:51
 msgid "Passwords do not match."
 msgstr "Daxil etdiyiniz şifrə əvvəlki ilə eyni deyil."
+
+#: apps/user/api/views.py:31
+msgid "Email and OTP are required."
+msgstr "Kod daxil etmək tələb olunur."
+
+#: apps/user/api/views.py:38
+msgid "No valid OTP found for this user."
+msgstr "Daxil etdiyiniz kod düzgün deyil"
+
+#: apps/user/api/views.py:41
+msgid "The OTP you entered is incorrect."
+msgstr "Daxil etdiyiniz kod səhvdir."
+
+#: apps/user/api/views.py:44
+msgid "OTP has expired or has already been used."
+msgstr ""
+"Daxil etdiyiniz kodun istifadə müddəti bitib və ya artıq istifadə olunub."
+
+#: apps/user/api/views.py:53
+msgid "Email verified successfully."
+msgstr "Email təsdiqləndi"
+
+#: apps/user/api/views.py:56 apps/user/api/views.py:74
+msgid "User not found."
+msgstr "İstifadəçi tapılmadı."
+
+#: apps/user/api/views.py:58
+msgid "An error occurred: {}"
+msgstr "Nəsə xəta oldu."
+
+#: apps/user/api/views.py:70
+msgid "OTP sent successfully."
+msgstr "Kodun göndərilməsi uğurlu oldu."
+
+#: apps/user/api/views.py:71
+msgid "User has already been verified."
+msgstr "İstifadəçi məlumatları təsdiqləndi"
 
 #: env/lib/python3.12/site-packages/ckeditor_uploader/forms.py:6
 msgid "Search files"
@@ -1615,3 +1652,6 @@ msgstr ""
 #, python-format
 msgid "Can't detect language for the text \"%s\" given."
 msgstr ""
+
+#~ msgid "Invalid OTP."
+#~ msgstr "Daxil etdiyiniz kod etibarsızdır."

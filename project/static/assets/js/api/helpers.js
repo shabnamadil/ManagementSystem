@@ -29,10 +29,16 @@ function handleFocus(field, messageList, messages) {
 
 function displayErrors(errors) {
     for (const [fieldName, messages] of Object.entries(errors)) {
-        const translatedMessages = messages.map(message => translateMessage(message));
-        const messageList = translatedMessages.join(' ');
+        let messageList;
+        if (Array.isArray(messages)) {
+            const translatedMessages = messages.map(message => translateMessage(message));
+            messageList = translatedMessages.join(' ');
+        } else {
+            messageList = translateMessage(messages);
+        }
+
         const field = document.querySelector(`[name="${fieldName}"]`);
-        handleFocus(field, messageList, messages)
+        handleFocus(field, messageList, messages);
     }
 }
 
